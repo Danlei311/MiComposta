@@ -32,13 +32,14 @@
 
 /* Estilo para el botón de agregar material */
 .btn-info {
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+  background-color: #254635;
+  border-color: #254635;
+  color: white;
 }
 
 .btn-info:hover {
-  background-color: #138496;
-  border-color: #117a8b;
+  background-color: #41554b;
+  border-color: #254635;
 }
 
 /* Estilo para el botón de eliminar */
