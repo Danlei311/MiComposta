@@ -1,102 +1,125 @@
 <div class="container mt-5">
-    <h3 class="text-center" style="color: #254635;">Compras a Proveedores</h3><br>
+  <h3 class="text-center" style="color: #254635;">Compras a Proveedores</h3><br>
 
-    <!-- Barra de búsqueda -->
-    <div class="row mb-3">
-        <div class="col-md-3 mx-auto">
-            <input type="text" class="form-control" placeholder="Buscar ..." style="max-width: 300px;" />
-        </div>
+  <!-- Barra de búsqueda -->
+  <div class="row mb-3 justify-content-center">
+    <div class="col-auto d-flex align-items-center">
+      <input type="date" class="form-control me-2" [(ngModel)]="fechaFiltro" />
+      <button class="btn btn-info" (click)="filtrarPorFecha()">Filtrar</button>
     </div>
+  </div>
 
-    <!-- Botón Comprar -->
-    <div class="row mb-3">
-        <div class="col-md-12 text-end">
-            <button class="btn btn-success" (click)="openCompraModal()">Comprar</button>
-        </div>
+  <!-- Botón Comprar -->
+  <div class="row mb-3">
+    <div class="col-md-12 text-end">
+      <button class="btn btn-secondary me-2" (click)="mostrarTodasCompras()">Mostrar todas las compras</button>
+      <button class="btn btn-success" (click)="openCompraModal()">Comprar</button>
     </div>
+  </div>
 
-    <!-- Tabla de compras -->
-    <table class="table table-bordered">
-        <thead class="bg-dark text-light">
-            <tr>
-                <th>Proveedor</th>
-                <th>Fecha</th>
-                <th>Detalle de Compra</th>
-                <th>Pago</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Proveedor 1</td>
-                <td>2025-07-28</td>
-                <td><button class="btn btn-dark">Ver Detalle</button></td>
-                <td>$500</td>
-            </tr>
-            <!-- Más filas según sea necesario -->
-        </tbody>
-    </table>
-    <br>
-</div>
+  <!-- Tabla de compras -->
+  <table class="table table-bordered">
+    <thead class="bg-dark text-light">
+      <tr>
+        <th>Proveedor</th>
+        <th>Fecha</th>
+        <th>Detalle de Compra</th>
+        <th>Pago</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let compra of comprasFiltradas">
+        <td>{{ compra.proveedor }}</td>
+        <td>{{ compra.fechaCompra | date: 'dd-MM-yyyy' }}</td>
+        <td><button class="btn btn-dark" (click)="openDetalleCompraModal(compra.idCompra)">Ver Detalle</button></td>
+        <td>{{ compra.total | currency }}</td>
+      </tr>
+      <tr *ngIf="comprasFiltradas.length === 0">
+        <td colspan="4" class="text-center text-muted">No hay compras registradas en esa fecha.</td>
+      </tr>
+    </tbody>
+  </table>
 
-<!-- Modal para ver el detalle de compra -->
-<ng-template #detalleCompraModal let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title" id="detalleCompraModalLabel">Detalle de Compra</h5>
-        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+
+  <!-- Modal para ver el detalle de compra -->
+  <ng-template #detalleCompraModal let-modal>
+    <div class="modal-header bg-dark text-light">
+      <h5 class="modal-title" id="detalleCompraModalLabel">Detalle de Compra</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <!-- Detalles de la compra aquí -->
-        <p>Detalles de la compra...</p>
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Material</th>
+            <th>Unidad</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detalle of detalleCompra">
+            <td>{{ detalle.material }}</td>
+            <td>{{ detalle.unidadMedida }}</td>
+            <td>{{ detalle.cantidad }}</td>
+            <td>{{ detalle.costoUnitario | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
     </div>
-</ng-template>
+  </ng-template>
 
-<!-- Modal para comprar -->
-<ng-template #compraModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="compraModalLabel">Realizar Compra</h5>
-    <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <!-- Seleccionar Proveedor -->
-    <div class="mb-3">
-      <label for="proveedor" class="form-label">Proveedor</label>
-      <select class="form-select" id="proveedor" [(ngModel)]="selectedProveedor" (change)="cargarMaterialesProveedor()">
-        <option *ngFor="let proveedor of proveedores" [value]="proveedor.idProveedor">{{ proveedor.nombre }}</option>
-      </select>
+
+  <!-- Modal para comprar -->
+  <ng-template #compraModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="compraModalLabel">Realizar Compra</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
     </div>
+    <div class="modal-body">
+      <!-- Seleccionar Proveedor -->
+      <div class="mb-3">
+        <label for="proveedor" class="form-label">Proveedor</label>
+        <select class="form-select" id="proveedor" [(ngModel)]="selectedProveedor"
+          (change)="cargarMaterialesProveedor()">
+          <option *ngFor="let proveedor of proveedores" [value]="proveedor.idProveedor">{{ proveedor.nombre }}</option>
+        </select>
+      </div>
 
-    <!-- Lista de materiales -->
-    <div *ngFor="let material of materialesCompra; let i = index">
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <label for="material" class="form-label">Material</label>
-          <select class="form-select" [(ngModel)]="material.idMaterial">
-            <option *ngFor="let m of materiales" [value]="m.idMaterial">{{ m.nombre }}</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label for="cantidad" class="form-label">Cantidad</label>
-          <input type="number" class="form-control" [(ngModel)]="material.cantidad" min="1" />
-        </div>
-        <div class="col-md-3">
-          <label for="precio" class="form-label">Precio Unitario</label>
-          <input type="number" class="form-control" [(ngModel)]="material.precio" min="0" />
-        </div>
-        <div class="col-md-1 d-flex align-items-end">
-          <button class="btn btn-danger w-100" (click)="eliminarMaterial(i)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-</svg></button>
+      <!-- Lista de materiales -->
+      <div *ngFor="let material of materialesCompra; let i = index">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="material" class="form-label">Material</label>
+            <select class="form-select" [(ngModel)]="material.idMaterial">
+              <option *ngFor="let m of materiales" [value]="m.idMaterial">{{ m.nombre }}</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <input type="number" class="form-control" [(ngModel)]="material.cantidad" min="1" />
+          </div>
+          <div class="col-md-3">
+            <label for="precio" class="form-label">Precio Unitario</label>
+            <input type="number" class="form-control" [(ngModel)]="material.precio" min="0" />
+          </div>
+          <div class="col-md-1 d-flex align-items-end">
+            <button class="btn btn-danger w-100" (click)="eliminarMaterial(i)"><svg xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+              </svg></button>
+          </div>
         </div>
       </div>
+      <button class="btn btn-info" (click)="agregarMaterial()">Agregar Material</button>
     </div>
-    <button class="btn btn-info" (click)="agregarMaterial()">Agregar Material</button>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
-    <button type="button" class="btn btn-primary" (click)="realizarCompra()">Realizar Compra</button>
-  </div>
-</ng-template>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+      <button type="button" class="btn btn-primary" (click)="realizarCompra()">Realizar Compra</button>
+    </div>
+  </ng-template>

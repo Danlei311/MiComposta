@@ -10,24 +10,31 @@ import { ComprasServicio } from '../../services/compras-servicio';
   templateUrl: './admin-compras-proveedores.html',
   styleUrl: './admin-compras-proveedores.css'
 })
-export class AdminComprasProveedores implements OnInit{
+export class AdminComprasProveedores implements OnInit {
   proveedores: any[] = [];  // Proveedores disponibles
   materiales: any[] = [];   // Materiales del proveedor seleccionado
   selectedProveedor: any = null;  // Proveedor seleccionado
   materialesCompra: any[] = [];   // Materiales que se agregan a la compra
+  compras: any[] = [];  // Lista de compras
+  detalleCompra: any[] = [];  // Detalle de la compra
+  selectedCompra: any = null;  // Compra seleccionada
+  fechaFiltro: string = '';  // Variable para almacenar la fecha seleccionada
+  comprasFiltradas: any[] = [];  // Lista de compras filtradas
 
   @ViewChild('compraModal') compraModal!: TemplateRef<any>;
+  @ViewChild('detalleCompraModal') detalleCompraModal!: TemplateRef<any>;
 
   constructor(private modalService: NgbModal, private comprasService: ComprasServicio) { }
 
   ngOnInit(): void {
+    this.obtenerCompras();
     this.obtenerProveedores();  // Obtener proveedores al inicio
   }
 
   // Abrir el modal para realizar una compra
   openCompraModal() {
     this.materialesCompra = [];  // Limpiar los materiales de la compra
-    this.modalService.open(this.compraModal, {size: 'lg'});  // Abrir el modal
+    this.modalService.open(this.compraModal, { size: 'lg' });  // Abrir el modal
   }
 
   // Obtener los proveedores
@@ -67,14 +74,84 @@ export class AdminComprasProveedores implements OnInit{
 
   // Realizar la compra
   realizarCompra() {
+    // Crear el objeto que vamos a enviar
     const compra = {
-      proveedorId: this.selectedProveedor,
-      materiales: this.materialesCompra
+      IdProveedor: this.selectedProveedor, // Enviar el ID del proveedor seleccionado
+      Materiales: this.materialesCompra.map(material => ({
+        IdMaterial: material.idMaterial,
+        Cantidad: material.cantidad,
+        PrecioUnitario: material.precio
+      }))
     };
 
-    // Aquí se enviaría el objeto `compra` al servidor para procesar la compra.
-    console.log('Realizando compra:', compra);
-    this.modalService.dismissAll();  // Cerrar el modal
+    // Llamar al servicio para realizar la compra
+    this.comprasService.comprarMaterial(compra).subscribe({
+      next: (response) => {
+        console.log('Compra realizada exitosamente:', response);
+        this.modalService.dismissAll();  // Cerrar el modal
+        this.obtenerCompras(); // Recargar la tabla después de la compra
+      },
+      error: (err) => {
+        console.error('Error al realizar la compra:', err);
+      }
+    });
+  }
+
+  // Obtener las compras
+  obtenerCompras() {
+    this.comprasService.getCompras().subscribe({
+      next: (response) => {
+        console.log("Compras obtenidas:", response);  // Verifica la respuesta
+        this.compras = response;  // Asignamos la lista de compras
+        this.comprasFiltradas = this.compras;
+      },
+      error: (err) => {
+        console.error('Error al obtener las compras:', err);
+      }
+    });
+  }
+
+  // Abrir el modal de detalle de compra
+  openDetalleCompraModal(idCompra: number) {
+    this.comprasService.getDetalleCompra(idCompra).subscribe({
+      next: (response) => {
+        this.detalleCompra = response;
+        this.modalService.open(this.detalleCompraModal);
+      },
+      error: (err) => {
+        console.error('Error al obtener el detalle de la compra:', err);
+      }
+    });
+  }
+
+  // Filtrar compras por fecha
+  filtrarPorFecha() {
+    if (this.fechaFiltro) {
+      this.comprasFiltradas = this.compras.filter(compra =>
+        this.esMismaFecha(compra.fechaCompra, this.fechaFiltro)
+      );
+    } else {
+      this.comprasFiltradas = this.compras;
+    }
+  }
+
+  // Mostrar todas las compras
+  mostrarTodasCompras() {
+    this.fechaFiltro = '';  // Limpiar el filtro de fecha
+    this.comprasFiltradas = this.compras;  // Mostrar todas las compras
+  }
+
+  private esMismaFecha(fechaA: string | Date, fechaB: string | Date): boolean {
+    // fechaA viene como "2025-07-28T20:27:43.233"
+    // fechaB viene como "2025-07-28" (input type="date")
+    const a = new Date(fechaA);
+    const [yearB, monthB, dayB] = typeof fechaB === 'string'
+      ? fechaB.split('-').map(Number)
+      : [fechaB.getFullYear(), fechaB.getMonth() + 1, fechaB.getDate()];
+
+    return a.getFullYear() === yearB &&
+      (a.getMonth() + 1) === monthB &&
+      a.getDate() === dayB;
   }
 
 }
