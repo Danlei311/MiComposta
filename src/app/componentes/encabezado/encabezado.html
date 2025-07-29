@@ -1,0 +1,51 @@
+<nav class="navbar custom-navbar">
+    <div class="container-fluid d-flex align-items-center justify-content-between px-4">
+
+        <!-- Logo -->
+        <div class="d-flex align-items-center">
+            <div class="logo-placeholder me-3">
+                <img src="assets/Logo.png" alt="Logo de la empresa" class="logo-img">
+            </div>
+            <span class="navbar-brand mb-0 h4" style="color: #254635; font-weight: bold;">CJ&A Software Group</span>
+        </div>
+
+
+        <!-- Enlaces + botón a la derecha -->
+        <div class="d-flex align-items-center gap-4">
+            <!-- Estos enlaces solo se muestran si NO hay sesión -->
+            <a *ngIf="mostrarLogin" routerLink="/" class="nav-link custom-link">Inicio</a>
+            <a *ngIf="mostrarLogin" routerLink="/preguntas" class="nav-link custom-link">Preguntas y Comentarios</a>
+            <a *ngIf="mostrarLogin" routerLink="/contacto" class="nav-link custom-link">Cotización y Contacto</a>
+
+            <!-- Mostrar opciones según el rol -->
+             <!--Enlaces de Administrador-->
+            <a *ngIf="isAdmin" routerLink="/dashboard" class="nav-link custom-link">Dashboard</a>
+            <a *ngIf="isAdmin" routerLink="/adminUsuarios" class="nav-link custom-link">Usuarios</a>
+            <div class="dropdown" *ngIf="isAdmin">
+                <button class="btn btn-link dropdown-toggle" type="button" id="providersDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Proveedores
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="providersDropdown">
+                    <li><a class="dropdown-item" routerLink="/proveedores">Control Proveedores</a></li>
+                    <li><a class="dropdown-item" routerLink="/comprasProveedores">Compra Proveedores</a></li>
+                </ul>
+            </div>
+            <div class="dropdown" *ngIf="isAdmin">
+                <button class="btn btn-link dropdown-toggle" type="button" id="providersDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Productos
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="providersDropdown">
+                    <li><a class="dropdown-item" routerLink="/materiales">Control de Materiales</a></li>
+                    <li><a class="dropdown-item" routerLink="/productos">Control de Productos</a></li>
+                </ul>
+            </div>
+            <!--Enlaces de Cliente-->
+            <a *ngIf="isCliente" routerLink="/perfil" class="nav-link custom-link">Perfil</a>
+            <a *ngIf="isCliente" routerLink="/compras" class="nav-link custom-link">Compras</a>
+
+            <!-- Botón de login o logout -->
+            <a *ngIf="mostrarLogin" class="btn custom-btn" routerLink="/login">Iniciar Sesión</a>
+            <button *ngIf="!mostrarLogin" (click)="logout()" class="btn custom-btn">Cerrar Sesión</button>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,48 @@
+/* Estilo de la tabla y el modal */
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: #254635;
+  color: white;
+}
+
+.table td {
+  background-color: #F4F0E4;
+}
+
+/* Estilo para el botón de Comprar */
+.btn-success {
+  background-color: #254635;
+  border: none;
+}
+
+/* Estilo para el modal */
+.modal-header {
+  background-color: #254635;
+  color: white;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #F4F0E4;
+  color: #254635;
+}
+
+/* Estilo para el botón de agregar material */
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+/* Estilo para el botón de eliminar */
+.btn-danger {
+  margin-left: 10px; 
+}
+

@@ -1,0 +1,28 @@
+.footer-custom {
+  background-color: #254635;
+  color: #F4F0E4;
+}
+
+.footer-custom h5 {
+  color: #F4F0E4;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.footer-custom p {
+  color: #F4F0E4;
+  margin: 0;
+}
+
+.footer-link {
+  color: #F4F0E4;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: text-decoration 0.3s ease;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}

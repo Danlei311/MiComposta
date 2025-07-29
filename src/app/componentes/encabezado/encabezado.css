@@ -1,0 +1,85 @@
+.custom-navbar {
+  background-color: #F4F0E4;
+  padding: 0.75rem 1rem;
+}
+
+.logo-placeholder {
+  width: 100px; /* Ajustar el tamaño del logo */
+  height: 120px; /* Ajustar el tamaño del logo */
+  background-color: #F4F0E4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-img {
+  width: 100%; /* Asegura que ocupe todo el espacio del contenedor */
+  height: 100%; /* Asegura que ocupe todo el espacio del contenedor */
+}
+
+.custom-link {
+  color: #254635;
+  font-weight: bold;
+  position: relative;
+  text-decoration: none;
+  padding-bottom: 4px;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #254635;
+  transition: width 0.3s ease;
+}
+
+.custom-link:hover::after {
+  width: 100%;
+}
+
+.custom-btn {
+  background-color: #254635;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.custom-btn:hover {
+  background-color: #000000;
+  color: white;
+}
+
+/* Estilo para el dropdown */
+.dropdown-toggle {
+  background-color: transparent;
+  border: none;
+  color: #254635;
+  font-weight: bold;
+  padding: 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-toggle:hover {
+  text-decoration: underline
+}
+
+.dropdown-menu {
+  background-color: #F4F0E4;
+  border: 1px solid #254635;
+}
+
+.dropdown-item {
+  color: #254635;
+  font-weight: normal;
+}
+
+.dropdown-item:hover {
+  background-color: #254635;
+  color: white;
+}

@@ -1,0 +1,40 @@
+/* Estilo de la tabla y el modal */
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: #254635; 
+  color: white;
+}
+
+.table td {
+  background-color: #F4F0E4;
+}
+
+/* Estilo para el botón de Registrar */
+.btn-success {
+  background-color: #254635;
+  border: none;
+}
+
+/* Estilo para el modal */
+.modal-header {
+  background-color: #254635;
+  color: white;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #F4F0E4;
+  color: #254635;
+}
+
+/* Estilo para los botones */
+.btn-warning {
+  margin-right: 10px; /* Separar los botones */
+}
+
+.btn-danger {
+  margin-left: 10px; /* Separar los botones */
+}
