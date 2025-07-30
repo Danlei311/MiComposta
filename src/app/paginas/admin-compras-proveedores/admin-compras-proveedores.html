@@ -102,6 +102,7 @@
             <label for="cantidad" class="form-label">Cantidad</label>
             <input type="number" class="form-control" [(ngModel)]="material.cantidad" min="1" />
           </div>
+
           <div class="col-md-3">
             <label for="precio" class="form-label">Precio Unitario</label>
             <input type="number" class="form-control" [(ngModel)]="material.precio" min="0" />
@@ -114,8 +115,11 @@
                   d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
               </svg></button>
           </div>
+
         </div>
+
       </div>
+      
       <button class="btn btn-info" (click)="agregarMaterial()">Agregar Material</button>
     </div>
     <div class="modal-footer">

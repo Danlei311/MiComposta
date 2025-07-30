@@ -1,1 +1,180 @@
-<p>productos works!</p>
+<div class="container mt-5">
+    <h3 class="text-center" style="color: #254635;">Administración de Productos</h3><br>
+
+    <!-- Barra de búsqueda -->
+    <div class="row mb-3">
+        <div class="col-md-3 mx-auto">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="filterProductos()"
+                placeholder="Buscar ..." style="max-width: 300px;" />
+        </div>
+    </div>
+
+    <!-- Botón Registrar -->
+    <div class="row mb-3">
+        <div class="col-md-12 text-end">
+            <button class="btn btn-success" (click)="open(registroModal)">Registrar</button>
+        </div>
+    </div>
+
+    <!-- Tabla de productos -->
+    <table class="table table-bordered">
+        <thead class="bg-dark text-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let producto of filteredProductos">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.descripcion }}</td>
+
+                <td>
+                    <button class="btn btn-warning me-2" (click)="openEditModal(producto)">Editar</button>
+                    <button class="btn btn-danger" (click)="openDeleteConfirmation(producto)">Eliminar</button>
+                    <button class="btn btn-info" style="margin-left: 10px;" (click)="openDetalleModal(producto)">Ver
+                        Detalles</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+</div>
+
+<!-- Modal para mostrar detalle de los materiales de cada producto-->
+<ng-template #detalleProducto let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="materialesProductoModalLabel">
+            Materiales del producto: {{ selectedProducto?.nombre }}
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+        <div *ngIf="!selectedProducto?.materiales || selectedProducto.materiales.length === 0">
+            <p>No hay materiales disponibles para este producto.</p>
+        </div>
+
+        <ul *ngIf="selectedProducto?.materiales?.length > 0">
+            <li *ngFor="let material of selectedProducto.materiales">
+                {{ material.nombreMaterial }}: {{ material.cantidadRequerida }} unidad(es)
+            </li>
+        </ul>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+    </div>
+</ng-template>
+
+<!-- Modal para registrar Producto -->
+<ng-template #registroModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="registroModalLabel">Registrar Nuevo Producto</h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <!-- Formulario de registro -->
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre" required />
+        </div>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <input type="text" class="form-control" [(ngModel)]="descripcion" name="descripcion" required />
+        </div>
+
+        <!-- Lista de maeriales -->
+        <div *ngFor="let material of materialesProducto; let i = index">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="material" class="form-label">Material</label>
+                    <select class="form-select" [(ngModel)]="material.idMaterial">
+                        <option *ngFor="let m of materiales" [value]="m.idMaterial">{{ m.nombre }}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="cantidadRequerida" class="form-label">Cantidad Requerida</label>
+                    <input type="number" class="form-control" [(ngModel)]="material.cantidad" min="1" />
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-danger w-100 py-2" (click)="eliminarMaterial(i)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                        </svg></button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="btn btn-info" (click)="agregarMaterial()">Agregar Material</button>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+        <button type="submit" class="btn btn-primary" (click)="registrarProducto()">Registrar Producto</button>
+    </div>
+</ng-template>
+
+<!-- Modal de confirmación para eliminar producto -->
+<ng-template #confirmDeleteModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p>¿Está seguro de que desea eliminar este producto?</p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete(modal)">Eliminar</button>
+    </div>
+</ng-template>
+
+<!-- Modal de Edición de Producto -->
+<ng-template #editProductoModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="editProductoModalLabel">Editar Producto</h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <!-- Formulario de edición -->
+        <form (ngSubmit)="modificarProducto()">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" [(ngModel)]="selectedProducto.nombre" name="nombre" required />
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input type="text" class="form-control" [(ngModel)]="selectedProducto.descripcion" name="descripcion"
+                    required />
+            </div>
+
+            <div *ngIf="successMessage" class="alert alert-success">
+                {{ successMessage }}
+            </div>
+            <div *ngIf="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
