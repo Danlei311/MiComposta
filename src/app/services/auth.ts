@@ -23,6 +23,7 @@ export class Auth {
   storeUserData(response: LoginResponse): void {
     localStorage.setItem('userId', response.idUsuario.toString());
     localStorage.setItem('role', response.rol);
+    localStorage.setItem('nombre', response.nombre); // Asegúrate de incluir esto
     this.isAuthenticatedSubject.next(true);  // Notificar que el usuario está autenticado
   }
 
