@@ -21,11 +21,9 @@
         <input type="tel" class="form-control" placeholder="Teléfono">
       </div>
       <div class="col-md-4">
-        <select class="form-select">
+        <select class="form-select" [(ngModel)]="selectedProducto" (change)="cargarMateriales()">
           <option selected disabled>Selecciona un producto</option>
-          <option>Compostera Estándar</option>
-          <option>Compostera Avanzada</option>
-          <option>Kit de Inicio</option>
+          <option *ngFor="let producto of productos" [value]="producto.idProducto">{{ producto.nombre }}</option>
         </select>
       </div>
     </div>
@@ -33,25 +31,13 @@
     <!-- Materiales asociados al producto -->
     <h6 class="fw-bold">Complementos</h6>
     <div class="row align-items-center mb-4">
-      <div class="col-auto">
-        <input class="form-check-input" type="checkbox" id="op1">
-        <label class="form-check-label" for="op1">Opción 1</label>
+      <div *ngFor="let material of materiales" class="col-auto">
+        <input class="form-check-input" type="checkbox" [id]="material.IdMaterial" (change)="toggleMaterial(material.IdMaterial)">
+        <label class="form-check-label" [for]="material.IdMaterial">{{ material.NombreMaterial }} ({{ material.Unidad }})</label>
       </div>
-      <div class="col-auto">
-        <input class="form-check-input" type="checkbox" id="op2">
-        <label class="form-check-label" for="op2">Opción 2</label>
-      </div>
-      <div class="col-auto">
-        <input class="form-check-input" type="checkbox" id="op3">
-        <label class="form-check-label" for="op3">Opción 3</label>
-      </div>
-      <div class="col-auto">
-        <input class="form-check-input" type="checkbox" id="op4">
-        <label class="form-check-label" for="op4">Opción 4</label>
-      </div>
-      <div class="col-auto ms-auto">
-        <button class="btn btn-main">Realizar Cotización</button>
-      </div>
+    </div>
+    <div class="col-auto ms-auto">
+      <button class="btn btn-main" (click)="realizarCotizacion()">Realizar Cotización</button>
     </div>
   </div>
 </section>
