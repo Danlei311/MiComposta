@@ -21,6 +21,7 @@
         <thead class="bg-dark text-light">
             <tr>
                 <th>Nombre</th>
+                <th>Nombre para la Venta</th>
                 <th>Unidad de Medida</th>
                 <th>Stock Actual</th>
                 <th>Costo Promedio</th>
@@ -30,6 +31,7 @@
         <tbody>
             <tr *ngFor="let material of filteredMaterials">
                 <td>{{ material.nombre }}</td>
+                <td>{{ material.nombreVenta }}</td>
                 <td>{{ material.unidadMedida }}</td>
                 <td>{{ material.stockActual }}</td>
                 <td>{{ material.costoPromedioActual }}</td>
@@ -55,6 +57,10 @@
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" [(ngModel)]="nombre" name="nombre" required />
+            </div>
+            <div class="mb-3">
+                <label for="nombreVenta" class="form-label">Nombre para la Venta</label>
+                <input type="text" class="form-control" id="nombreVenta" [(ngModel)]="nombreVenta" name="nombreVenta" required />
             </div>
             <div class="mb-3">
                 <label for="unidadMedida" class="form-label">Unidad de Medida</label>
@@ -109,6 +115,10 @@
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" [(ngModel)]="selectedMaterial.nombre" name="nombre"
                     required />
+            </div>
+            <div class="mb-3">
+                <label for="nombreVenta" class="form-label">Nombre para la Venta</label>
+                <input type="text" class="form-control" id="nombreVenta" [(ngModel)]="selectedMaterial.nombreVenta" name="nombreVenta" required />
             </div>
             <div class="mb-3">
                 <label for="unidadMedida" class="form-label">Unidad de Medida</label>

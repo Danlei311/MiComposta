@@ -12,13 +12,14 @@ import { MaterialesService } from '../../services/materiales-service';
 })
 export class Materiales implements OnInit {
   nombre: string = '';
+  nombreVenta: string = '';
   unidadMedida: string = 'Unidad';
   errorMessage: string = '';
   successMessage: string = '';
   materiales: any[] = [];
   searchTerm: string = '';
   filteredMaterials: any[] = [];
-  selectedMaterial: any = { nombre: '', unidadMedida: 'Unidad' };;
+  selectedMaterial: any = { nombre: '', unidadMedida: 'Unidad', nombreVenta: '' };
 
   constructor(private materialService: MaterialesService, private modalService: NgbModal) { }
 
@@ -36,7 +37,8 @@ export class Materiales implements OnInit {
   openEditModal(material: any): void {
     this.selectedMaterial = {
       nombre: material.nombre,
-      unidadMedida: material.unidadMedida || 'Unidad'  // Asegura que 'unidadMedida' no sea nulo
+      unidadMedida: material.unidadMedida || 'Unidad',  // Asegura que 'unidadMedida' no sea nulo
+      nombreVenta: material.nombreVenta || ''
     };
     this.modalService.open(this.editMaterialModal);
   }
@@ -60,6 +62,7 @@ export class Materiales implements OnInit {
   registrarMaterial(): void {
     const newMaterial = {
       nombre: this.nombre,
+      nombreVenta: this.nombreVenta,
       unidadMedida: this.unidadMedida
     };
 
@@ -109,7 +112,8 @@ export class Materiales implements OnInit {
     const updatedMaterial = {
       ...this.selectedMaterial,
       nombre: this.selectedMaterial.nombre,
-      unidadMedida: this.selectedMaterial.unidadMedida
+      unidadMedida: this.selectedMaterial.unidadMedida,
+      nombreVenta: this.selectedMaterial.nombreVenta
     };
 
     this.materialService.updateMaterial(updatedMaterial).subscribe({
@@ -144,6 +148,7 @@ export class Materiales implements OnInit {
   filterMaterials(): void {
     this.filteredMaterials = this.materiales.filter(material =>
       material.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      material.nombreVenta.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       material.unidadMedida.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
