@@ -85,15 +85,24 @@
             <input type="text" class="form-control" [(ngModel)]="descripcion" name="descripcion" required />
         </div>
 
+        <div class="alert alert-info p-2 mb-3">
+            <strong>Materiales obligatorios:</strong>
+            <ul class="mb-0 ps-3">
+                <li *ngFor="let mat of materialesObligatorios">{{ mat }}</li>
+            </ul>
+        </div>
+
+
         <!-- Lista de maeriales -->
         <div *ngFor="let material of materialesProducto; let i = index">
             <div class="row mb-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="material" class="form-label">Material</label>
                     <select class="form-select" [(ngModel)]="material.idMaterial">
-                        <option *ngFor="let m of materiales" [value]="m.idMaterial">{{ m.nombre }}</option>
+                        <option *ngFor="let m of materiales" [value]="m.idMaterial">{{ m.nombreVenta }}</option>
                     </select>
                 </div>
+                
                 <div class="col-md-4">
                     <label for="cantidadRequerida" class="form-label">Cantidad Requerida</label>
                     <input type="number" class="form-control" [(ngModel)]="material.cantidad" min="1" />
@@ -125,7 +134,14 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
-        <button type="submit" class="btn btn-primary" (click)="registrarProducto()">Registrar Producto</button>
+        <button class="btn btn-success" (click)="registrarProducto()" [disabled]="!materialesObligatoriosSeleccionados">
+            Registrar Producto
+        </button>
+        <div class="text-danger mt-2" *ngIf="!materialesObligatoriosSeleccionados">
+            Debes seleccionar todos los materiales obligatorios para registrar el producto.
+        </div>
+
+
     </div>
 </ng-template>
 

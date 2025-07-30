@@ -24,6 +24,7 @@ export class Productos implements OnInit {
   materialSeleccionado: any = null;
 
   selectedProducto: any = { idProducto: 0, nombre: '', descripcion: '' };
+  materialesObligatorios: string[] = ["Controlador WiFi", "Sensor de humedad", "Cables de conexión"];
 
   @ViewChild('confirmDeleteModal') confirmDeleteModal!: TemplateRef<any>;
   @ViewChild('editProductoModal') editProductoModal!: TemplateRef<any>;
@@ -57,6 +58,16 @@ export class Productos implements OnInit {
     });
   }
 
+  get materialesObligatoriosSeleccionados(): boolean {
+  if (!this.materiales || !this.materialesProducto) return false;
+
+  return this.materialesObligatorios.every(nombre => {
+    const material = this.materiales.find(m => m.nombreVenta.trim().toLowerCase() === nombre.trim().toLowerCase());
+    return material && this.materialesProducto.some(mp => +mp.idMaterial === +material.idMaterial);
+  });
+}
+
+
   obtenerMateriales(): void {
     this.materialService.getMaterials().subscribe({
       next: (response) => {
@@ -70,34 +81,34 @@ export class Productos implements OnInit {
   }
 
   registrarProducto(): void {
-  const nuevoProducto = {
-    nombre: this.nombre,
-    descripcion: this.descripcion,
-    materiales: this.materialesProducto.map(mat => {
-      const materialSeleccionado = this.materiales.find(m => m.idMaterial === mat.idMaterial);
-      return {
-        idMaterial: mat.idMaterial,
-        nombre: materialSeleccionado?.nombre || '',
-        cantidadRequerida: mat.cantidad
-      };
-    })
-  };
+    const nuevoProducto = {
+      nombre: this.nombre,
+      descripcion: this.descripcion,
+      materiales: this.materialesProducto.map(mat => {
+        const materialSeleccionado = this.materiales.find(m => m.idMaterial === mat.idMaterial);
+        return {
+          idMaterial: mat.idMaterial,
+          nombre: materialSeleccionado?.nombre || '',
+          cantidadRequerida: mat.cantidad
+        };
+      })
+    };
 
-  this.productoService.registrarProducto(nuevoProducto).subscribe({
-    next: () => {
-      this.successMessage = 'Producto registrado correctamente.';
-      this.nombre = '';
-      this.descripcion = '';
-      this.materialesProducto = [];
-      this.obtenerProductos();
-      setTimeout(() => this.successMessage = '', 2000);
-    },
-    error: () => {
-      this.errorMessage = 'Error al registrar el producto.';
-      setTimeout(() => this.errorMessage = '', 2000);
-    }
-  });
-}
+    this.productoService.registrarProducto(nuevoProducto).subscribe({
+      next: () => {
+        this.successMessage = 'Producto registrado correctamente.';
+        this.nombre = '';
+        this.descripcion = '';
+        this.materialesProducto = [];
+        this.obtenerProductos();
+        setTimeout(() => this.successMessage = '', 2000);
+      },
+      error: () => {
+        this.errorMessage = 'Error al registrar el producto.';
+        setTimeout(() => this.errorMessage = '', 2000);
+      }
+    });
+  }
 
   modificarProducto(): void {
     const productoActualizado = {
