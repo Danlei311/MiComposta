@@ -59,13 +59,24 @@ export class Productos implements OnInit {
   }
 
   get materialesObligatoriosSeleccionados(): boolean {
-  if (!this.materiales || !this.materialesProducto) return false;
+    if (!this.materiales || !this.materialesProducto) return false;
 
-  return this.materialesObligatorios.every(nombre => {
-    const material = this.materiales.find(m => m.nombreVenta.trim().toLowerCase() === nombre.trim().toLowerCase());
+    return this.materialesObligatorios.every(nombre => {
+      const material = this.materiales.find(m => m.nombreVenta.trim().toLowerCase() === nombre.trim().toLowerCase());
+      return material && this.materialesProducto.some(mp => +mp.idMaterial === +material.idMaterial);
+    });
+  }
+
+  // Agregar este método para verificar si un material obligatorio está seleccionado
+  esMaterialObligatorioSeleccionado(nombreMaterial: string): boolean {
+    if (!this.materiales || !this.materialesProducto) return false;
+
+    const material = this.materiales.find(m =>
+      m.nombreVenta.trim().toLowerCase() === nombreMaterial.trim().toLowerCase()
+    );
+
     return material && this.materialesProducto.some(mp => +mp.idMaterial === +material.idMaterial);
-  });
-}
+  }
 
 
   obtenerMateriales(): void {

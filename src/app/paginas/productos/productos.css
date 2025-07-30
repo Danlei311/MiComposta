@@ -47,3 +47,105 @@
   margin-left: 10px; 
 }
 
+/* ===== AGREGAR ESTOS ESTILOS A tu productos.component.css ===== */
+
+/* Estilos para materiales obligatorios */
+.material-seleccionado {
+    transition: all 0.3s ease-in-out;
+    opacity: 0.8;
+}
+
+.material-pendiente {
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+}
+
+/* Animación para el tachado */
+.material-nombre {
+    transition: all 0.4s ease-in-out;
+    position: relative;
+}
+
+/* Efecto de tachado suave */
+.text-decoration-line-through {
+    text-decoration: line-through !important;
+    text-decoration-color: #198754;
+    text-decoration-thickness: 2px;
+}
+
+/* Animación del ícono */
+.material-icon {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+}
+
+.material-seleccionado .material-icon {
+    transform: scale(1.1);
+}
+
+/* Animación del badge */
+.badge {
+    animation: fadeInScale 0.5s ease-in-out;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hover effects */
+.material-seleccionado:hover .material-nombre {
+    color: #198754 !important;
+}
+
+.material-pendiente:hover {
+    background-color: rgba(13, 202, 240, 0.1);
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+/* Efecto de pulso para materiales pendientes */
+.material-pendiente .bi-circle {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+/* Mejora visual para el check */
+.bi-check-circle-fill {
+    filter: drop-shadow(0 0 3px rgba(25, 135, 84, 0.5));
+}
+
+/* Lista más espaciada */
+.alert ul li {
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .badge {
+        font-size: 0.7em;
+    }
+    
+    .material-icon {
+        margin-right: 0.25rem !important;
+    }
+}

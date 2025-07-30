@@ -88,7 +88,25 @@
         <div class="alert alert-info p-2 mb-3">
             <strong>Materiales obligatorios:</strong>
             <ul class="mb-0 ps-3">
-                <li *ngFor="let mat of materialesObligatorios">{{ mat }}</li>
+                <li *ngFor="let mat of materialesObligatorios" [ngClass]="{
+                'material-seleccionado': esMaterialObligatorioSeleccionado(mat),
+                'material-pendiente': !esMaterialObligatorioSeleccionado(mat)
+            }">
+                    <span class="material-icon me-1">
+                        <i *ngIf="esMaterialObligatorioSeleccionado(mat)"
+                            class="bi bi-check-circle-fill text-success"></i>
+                        <i *ngIf="!esMaterialObligatorioSeleccionado(mat)" class="bi bi-circle text-muted"></i>
+                    </span>
+                    <span class="material-nombre" [ngClass]="{
+                      'text-decoration-line-through text-success': esMaterialObligatorioSeleccionado(mat),
+                      'text-dark': !esMaterialObligatorioSeleccionado(mat)
+                  }">
+                        {{ mat }}
+                    </span>
+                    <span *ngIf="esMaterialObligatorioSeleccionado(mat)" class="badge bg-success ms-2 small">
+                        ✓ Seleccionado
+                    </span>
+                </li>
             </ul>
         </div>
 
@@ -102,7 +120,7 @@
                         <option *ngFor="let m of materiales" [value]="m.idMaterial">{{ m.nombreVenta }}</option>
                     </select>
                 </div>
-                
+
                 <div class="col-md-4">
                     <label for="cantidadRequerida" class="form-label">Cantidad Requerida</label>
                     <input type="number" class="form-control" [(ngModel)]="material.cantidad" min="1" />
@@ -115,11 +133,10 @@
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                             <path
                                 d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                        </svg></button>
+                        </svg>
+                    </button>
                 </div>
-
             </div>
-
         </div>
 
         <button class="btn btn-info" (click)="agregarMaterial()">Agregar Material</button>
@@ -140,8 +157,6 @@
         <div class="text-danger mt-2" *ngIf="!materialesObligatoriosSeleccionados">
             Debes seleccionar todos los materiales obligatorios para registrar el producto.
         </div>
-
-
     </div>
 </ng-template>
 
