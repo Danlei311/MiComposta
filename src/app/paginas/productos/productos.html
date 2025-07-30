@@ -22,7 +22,6 @@
             <tr>
                 <th>Nombre</th>
                 <th>Descripción</th>
-                <th>Materiales requeridos</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -30,21 +29,44 @@
             <tr *ngFor="let producto of filteredProductos">
                 <td>{{ producto.nombre }}</td>
                 <td>{{ producto.descripcion }}</td>
-                <td>
-                    <ul class="list-unstyled">
-                        <li *ngFor="let material of producto.materiales">
-                            {{ material.nombreMaterial }}: {{ material.cantidadRequerida }} unidad(es)
-                        </li>
-                    </ul>
+
                 <td>
                     <button class="btn btn-warning me-2" (click)="openEditModal(producto)">Editar</button>
                     <button class="btn btn-danger" (click)="openDeleteConfirmation(producto)">Eliminar</button>
+                    <button class="btn btn-info" style="margin-left: 10px;" (click)="openDetalleModal(producto)">Ver
+                        Detalles</button>
                 </td>
             </tr>
         </tbody>
     </table>
     <br>
 </div>
+
+<!-- Modal para mostrar detalle de los materiales de cada producto-->
+<ng-template #detalleProducto let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="materialesProductoModalLabel">
+            Materiales del producto: {{ selectedProducto?.nombre }}
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+        <div *ngIf="!selectedProducto?.materiales || selectedProducto.materiales.length === 0">
+            <p>No hay materiales disponibles para este producto.</p>
+        </div>
+
+        <ul *ngIf="selectedProducto?.materiales?.length > 0">
+            <li *ngFor="let material of selectedProducto.materiales">
+                {{ material.nombreMaterial }}: {{ material.cantidadRequerida }} unidad(es)
+            </li>
+        </ul>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+    </div>
+</ng-template>
 
 <!-- Modal para registrar Producto -->
 <ng-template #registroModal let-modal>
@@ -94,6 +116,13 @@
         <button class="btn btn-info" (click)="agregarMaterial()">Agregar Material</button>
     </div>
 
+    <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
         <button type="submit" class="btn btn-primary" (click)="registrarProducto()">Registrar Producto</button>
@@ -109,6 +138,7 @@
     <div class="modal-body">
         <p>¿Está seguro de que desea eliminar este producto?</p>
     </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cancelar</button>
         <button type="button" class="btn btn-danger" (click)="confirmDelete(modal)">Eliminar</button>

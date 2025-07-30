@@ -27,6 +27,7 @@ export class Productos implements OnInit {
 
   @ViewChild('confirmDeleteModal') confirmDeleteModal!: TemplateRef<any>;
   @ViewChild('editProductoModal') editProductoModal!: TemplateRef<any>;
+  @ViewChild('detalleProducto') detalleProductoModal!: TemplateRef<any>;
 
   constructor(
     private productoService: ProductosService,
@@ -134,6 +135,16 @@ export class Productos implements OnInit {
   openEditModal(producto: any): void {
     this.selectedProducto = { ...producto };
     this.modalService.open(this.editProductoModal);
+  }
+
+  openDetalleModal(producto: any): void {
+    this.selectedProducto = { ...producto };
+    this.materialesProducto = producto.materiales.map((mat: any) => ({
+      idMaterial: mat.idMaterial,
+      cantidad: mat.cantidadRequerida,
+      precio: mat.precio || 0
+    }));
+    this.modalService.open(this.detalleProductoModal, { size: 'lg' });
   }
 
   openDeleteConfirmation(producto: any): void {
