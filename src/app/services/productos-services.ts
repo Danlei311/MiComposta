@@ -24,12 +24,12 @@ export class ProductosService {
 
     // Método para modificar un producto
     modificarProducto(id: number, producto: any): Observable<any> {
-        return this.http.put(`${this.apiUrl}/updateProducto/${id}`, producto);
+        return this.http.put(`${this.apiUrl}/AdminProducto/updateProducto/${id}`, producto);
     }
-
 
     // Método para eliminar un producto
     eliminarProducto(productoId: number): Observable<any> {
-        return this.http.put<any>(`${this.apiUrl}/AdminProducto/deleteProducto/${productoId}`, {});
+        return this.http.delete<any>(`${this.apiUrl}/AdminProducto/deleteProducto/${productoId}`, {});
     }
+    
 }

@@ -3,6 +3,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductosService } from '../../services/productos-services';
+import { MaterialesService } from '../../services/materiales-service';
 
 @Component({
   selector: 'app-productos',
@@ -18,19 +19,27 @@ export class Productos implements OnInit {
   productos: any[] = [];
   filteredProductos: any[] = [];
   searchTerm: string = '';
+  materialesProducto: any[] = [];
+  materiales: any[] = [];
+  materialSeleccionado: any = null;
 
   selectedProducto: any = { idProducto: 0, nombre: '', descripcion: '' };
 
   @ViewChild('confirmDeleteModal') confirmDeleteModal!: TemplateRef<any>;
   @ViewChild('editProductoModal') editProductoModal!: TemplateRef<any>;
 
-  constructor(private productoService: ProductosService, private modalService: NgbModal) {}
+  constructor(
+    private productoService: ProductosService,
+    private modalService: NgbModal,
+    private materialService: MaterialesService) { }
 
   ngOnInit(): void {
     this.obtenerProductos();
+    this.obtenerMateriales();
   }
 
   open(content: any): void {
+    this.materialesProducto = [];
     this.modalService.open(content);
   }
 
@@ -47,26 +56,47 @@ export class Productos implements OnInit {
     });
   }
 
-  registrarProducto(): void {
-    const nuevoProducto = {
-      nombre: this.nombre,
-      descripcion: this.descripcion
-    };
-
-    this.productoService.registrarProducto(nuevoProducto).subscribe({
-      next: () => {
-        this.successMessage = 'Producto registrado correctamente.';
-        this.nombre = '';
-        this.descripcion = '';
-        this.obtenerProductos();
-        setTimeout(() => this.successMessage = '', 2000);
+  obtenerMateriales(): void {
+    this.materialService.getMaterials().subscribe({
+      next: (response) => {
+        this.materiales = response;
       },
       error: () => {
-        this.errorMessage = 'Error al registrar el producto.';
+        this.errorMessage = 'Error al cargar los materiales.';
         setTimeout(() => this.errorMessage = '', 2000);
       }
     });
   }
+
+  registrarProducto(): void {
+  const nuevoProducto = {
+    nombre: this.nombre,
+    descripcion: this.descripcion,
+    materiales: this.materialesProducto.map(mat => {
+      const materialSeleccionado = this.materiales.find(m => m.idMaterial === mat.idMaterial);
+      return {
+        idMaterial: mat.idMaterial,
+        nombre: materialSeleccionado?.nombre || '',
+        cantidadRequerida: mat.cantidad
+      };
+    })
+  };
+
+  this.productoService.registrarProducto(nuevoProducto).subscribe({
+    next: () => {
+      this.successMessage = 'Producto registrado correctamente.';
+      this.nombre = '';
+      this.descripcion = '';
+      this.materialesProducto = [];
+      this.obtenerProductos();
+      setTimeout(() => this.successMessage = '', 2000);
+    },
+    error: () => {
+      this.errorMessage = 'Error al registrar el producto.';
+      setTimeout(() => this.errorMessage = '', 2000);
+    }
+  });
+}
 
   modificarProducto(): void {
     const productoActualizado = {
@@ -78,11 +108,11 @@ export class Productos implements OnInit {
       next: () => {
         this.successMessage = 'Producto actualizado correctamente.';
         this.obtenerProductos();
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => this.successMessage = '', 3700);
       },
       error: () => {
         this.errorMessage = 'Error al actualizar el producto.';
-        setTimeout(() => this.errorMessage = '', 2000);
+        setTimeout(() => this.errorMessage = '', 3500);
       }
     });
   }
@@ -92,11 +122,11 @@ export class Productos implements OnInit {
       next: () => {
         this.successMessage = 'Producto eliminado correctamente.';
         this.obtenerProductos();
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => this.successMessage = '', 3700);
       },
       error: () => {
         this.errorMessage = 'Error al eliminar el producto.';
-        setTimeout(() => this.errorMessage = '', 2000);
+        setTimeout(() => this.errorMessage = '', 3500);
       }
     });
   }
@@ -121,5 +151,13 @@ export class Productos implements OnInit {
       producto.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       producto.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  eliminarMaterial(index: number) {
+    this.materialesProducto.splice(index, 1);
+  }
+
+  agregarMaterial() {
+    this.materialesProducto.push({ idMaterial: null, cantidad: 1, precio: 0 });
   }
 }
