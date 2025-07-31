@@ -10,6 +10,7 @@ import { AdminProveedores } from './paginas/admin-proveedores/admin-proveedores'
 import { AdminComprasProveedores } from './paginas/admin-compras-proveedores/admin-compras-proveedores';
 import { Materiales } from './paginas/materiales/materiales';
 import { Productos } from './paginas/productos/productos';
+import { PerfilInicio } from './paginas/perfil-inicio/perfil-inicio';
 
 export const routes: Routes = [
     { path: '', component: Inicio },
@@ -23,5 +24,6 @@ export const routes: Routes = [
     { path: 'materiales', component: Materiales },
     { path: 'productos', component: Productos },
     { path: 'perfil', component: Perfil },
+    { path: 'perfilInicio', component: PerfilInicio },
     { path: '**', redirectTo: '' }
 ];

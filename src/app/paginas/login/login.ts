@@ -28,13 +28,12 @@ export class Login {
       (response) => {
         // Almacenar los datos del usuario en localStorage
         this.authService.storeUserData(response);
-
         // Redirigir según el rol
         const role = response.rol;
         if (role === 'Administrador') {
           this.router.navigate(['/dashboard']);
         } else if (role === 'Cliente') {
-          this.router.navigate(['/perfil']);
+          this.router.navigate(['/perfilInicio']);
         }
       },
       (error) => {
