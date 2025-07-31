@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PerfilDeUsuarioService } from '../../../services/perfilUser-service';
@@ -11,6 +11,7 @@ import { PerfilDeUsuarioService } from '../../../services/perfilUser-service';
   styleUrl: './datos-usuario.css'
 })
 export class DatosUsuario implements OnInit {
+  @Output() datosActualizados = new EventEmitter<void>();
   idUsuario: number = 0;
 
   cliente = {
@@ -38,6 +39,7 @@ export class DatosUsuario implements OnInit {
       phone: this.cliente.telefono
     }).subscribe({
       next: res => {
+        this.perfilService.notificarActualizacion();
         this.mensajeExito = res.message || '¡Datos actualizados con éxito! 🎉';
         setTimeout(() => this.mensajeExito = '', 3500);
       },

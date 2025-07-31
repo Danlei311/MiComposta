@@ -4,22 +4,22 @@
 
         <div class="profile-info">
             <div class="avatar-container">
-                <div class="avatar">AM</div>
-                <div class="camera-icon"></div>
+                <div class="avatar">{{ iniciales }}</div>
             </div>
 
             <div class="user-details">
-                <h2 class="user-name">Ana María González Quiñones</h2>
-                <p class="user-email">anaquinonesgmail.com</p>
-                <button class="edit-button">Editar</button>
+                <div class="user-details">
+                    <h2 class="user-name">{{ cliente.nombreCompleto }}</h2>
+                    <p class="user-email">{{ cliente.correo }}</p>
+                    <p class="user-phone">{{ cliente.telefono }}</p>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="tabs-container">
         <div class="tabs">
-            <button class="tab" [class.active]="activeTab === 'perfil'"
-                (click)="switchTab('perfil')">Perfil</button>
+            <button class="tab" [class.active]="activeTab === 'perfil'" (click)="switchTab('perfil')">Perfil</button>
             <button class="tab" [class.active]="activeTab === 'seguridad'"
                 (click)="switchTab('seguridad')">Seguridad</button>
         </div>

@@ -40,19 +40,43 @@ body {
 
 .avatar-container {
     position: relative;
+    display: inline-block;
 }
 
 .avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4ade80 0%, #059669 50%, #065f46 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 32px;
-    font-weight: 500;
+    font-weight: 600;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);
+    transition: all 0.3s ease;
+}
+
+.avatar::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(135deg, #86efac, #10b981, #047857);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.avatar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(34, 197, 94, 0.4);
+}
+
+.avatar:hover::before {
+    opacity: 1;
 }
 
 .camera-icon {
@@ -97,6 +121,12 @@ body {
 }
 
 .user-email {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.user-phone {
     font-size: 14px;
     color: #666;
     margin-bottom: 16px;
