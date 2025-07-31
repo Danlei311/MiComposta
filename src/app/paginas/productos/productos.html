@@ -59,6 +59,7 @@
         <ul *ngIf="selectedProducto?.materiales?.length > 0">
             <li *ngFor="let material of selectedProducto.materiales">
                 {{ material.nombreMaterial }}: {{ material.cantidadRequerida }} unidad(es)
+                <span *ngIf="material.obligatorio" class="badge bg-success ms-2">Obligatorio</span>
             </li>
         </ul>
     </div>
@@ -83,31 +84,6 @@
         <div class="mb-3">
             <label for="descripcion" class="form-label">Descripción</label>
             <input type="text" class="form-control" [(ngModel)]="descripcion" name="descripcion" required />
-        </div>
-
-        <div class="alert alert-info p-2 mb-3">
-            <strong>Materiales obligatorios:</strong>
-            <ul class="mb-0 ps-3">
-                <li *ngFor="let mat of materialesObligatorios" [ngClass]="{
-                'material-seleccionado': esMaterialObligatorioSeleccionado(mat),
-                'material-pendiente': !esMaterialObligatorioSeleccionado(mat)
-            }">
-                    <span class="material-icon me-1">
-                        <i *ngIf="esMaterialObligatorioSeleccionado(mat)"
-                            class="bi bi-check-circle-fill text-success"></i>
-                        <i *ngIf="!esMaterialObligatorioSeleccionado(mat)" class="bi bi-circle text-muted"></i>
-                    </span>
-                    <span class="material-nombre" [ngClass]="{
-                      'text-decoration-line-through text-success': esMaterialObligatorioSeleccionado(mat),
-                      'text-dark': !esMaterialObligatorioSeleccionado(mat)
-                  }">
-                        {{ mat }}
-                    </span>
-                    <span *ngIf="esMaterialObligatorioSeleccionado(mat)" class="badge bg-success ms-2 small">
-                        ✓ Seleccionado
-                    </span>
-                </li>
-            </ul>
         </div>
 
 
@@ -136,6 +112,14 @@
                         </svg>
                     </button>
                 </div>
+
+                <div class="col-md-3 form-check">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="material.obligatorio"
+                        name="obligatorio-{{i}}" id="obligatorio-{{i}}" />
+                    <label class="form-check-label" for="obligatorio-{{i}}">
+                        Obligatorio
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -151,12 +135,9 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
-        <button class="btn btn-success" (click)="registrarProducto()" [disabled]="!materialesObligatoriosSeleccionados">
+        <button class="btn btn-success" (click)="registrarProducto()">
             Registrar Producto
         </button>
-        <div class="text-danger mt-2" *ngIf="!materialesObligatoriosSeleccionados">
-            Debes seleccionar todos los materiales obligatorios para registrar el producto.
-        </div>
     </div>
 </ng-template>
 

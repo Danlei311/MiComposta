@@ -22,9 +22,7 @@ export class Productos implements OnInit {
   materialesProducto: any[] = [];
   materiales: any[] = [];
   materialSeleccionado: any = null;
-
   selectedProducto: any = { idProducto: 0, nombre: '', descripcion: '' };
-  materialesObligatorios: string[] = ["Controlador WiFi", "Sensor de humedad", "Cables de conexión"];
 
   @ViewChild('confirmDeleteModal') confirmDeleteModal!: TemplateRef<any>;
   @ViewChild('editProductoModal') editProductoModal!: TemplateRef<any>;
@@ -58,30 +56,11 @@ export class Productos implements OnInit {
     });
   }
 
-  get materialesObligatoriosSeleccionados(): boolean {
-    if (!this.materiales || !this.materialesProducto) return false;
-
-    return this.materialesObligatorios.every(nombre => {
-      const material = this.materiales.find(m => m.nombreVenta.trim().toLowerCase() === nombre.trim().toLowerCase());
-      return material && this.materialesProducto.some(mp => +mp.idMaterial === +material.idMaterial);
-    });
-  }
-
-  // Agregar este método para verificar si un material obligatorio está seleccionado
-  esMaterialObligatorioSeleccionado(nombreMaterial: string): boolean {
-    if (!this.materiales || !this.materialesProducto) return false;
-
-    const material = this.materiales.find(m =>
-      m.nombreVenta.trim().toLowerCase() === nombreMaterial.trim().toLowerCase()
-    );
-
-    return material && this.materialesProducto.some(mp => +mp.idMaterial === +material.idMaterial);
-  }
-
 
   obtenerMateriales(): void {
     this.materialService.getMaterials().subscribe({
       next: (response) => {
+        console.log('Materiales cargados:', response);
         this.materiales = response;
       },
       error: () => {
@@ -90,6 +69,7 @@ export class Productos implements OnInit {
       }
     });
   }
+
 
   registrarProducto(): void {
     const nuevoProducto = {
@@ -100,7 +80,8 @@ export class Productos implements OnInit {
         return {
           idMaterial: mat.idMaterial,
           nombre: materialSeleccionado?.nombre || '',
-          cantidadRequerida: mat.cantidad
+          cantidadRequerida: mat.cantidad,
+          obligatorio: mat.obligatorio
         };
       })
     };
@@ -164,7 +145,8 @@ export class Productos implements OnInit {
     this.materialesProducto = producto.materiales.map((mat: any) => ({
       idMaterial: mat.idMaterial,
       cantidad: mat.cantidadRequerida,
-      precio: mat.precio || 0
+      precio: mat.precio || 0,
+      obligatorio: mat.obligatorio ?? false
     }));
     this.modalService.open(this.detalleProductoModal, { size: 'lg' });
   }
@@ -191,6 +173,6 @@ export class Productos implements OnInit {
   }
 
   agregarMaterial() {
-    this.materialesProducto.push({ idMaterial: null, cantidad: 1, precio: 0 });
+    this.materialesProducto.push({ idMaterial: null, cantidad: 1, precio: 0, obligatorio: false });
   }
 }
