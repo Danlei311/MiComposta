@@ -1,0 +1,150 @@
+<div class="container mt-5">
+    <h3 class="text-center" style="color: #254635;">Mis Cotizaciones Pendientes</h3>
+    <br>
+
+    <!-- Lista de cotizaciones -->
+    <div class="row justify-content-center">
+        <ng-container *ngFor="let cotizacion of cotizacionesPendientes; let i = index">
+            <!-- Nueva fila cada 3 elementos o al inicio -->
+            <div *ngIf="i % 3 === 0" class="w-100"></div>
+
+            <!-- Tarjeta individual -->
+            <div class="col-12 col-md-8 col-lg-4 mb-4"
+                [class.offset-md-2]="cotizacionesPendientes.length === 1 && i === 0"
+                [class.offset-lg-0]="cotizacionesPendientes.length > 1"
+                [class.offset-md-2]="cotizacionesPendientes.length === 2 && (i % 3 === 0 || i % 3 === 1)">
+                <div class="card h-100 cotizacion-card mx-auto" style="max-width: 360px;">
+                    <div class="card-header bg-main text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>{{ cotizacion.fechaCotizacion | date:'shortDate' }}</span>
+                            <span class="badge bg-light text-black">Pendiente</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-truncate">{{ cotizacion.producto }}</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Total:</span>
+                            <span class="fw-bold text-main fs-5">${{ cotizacion.totalVenta | number:'1.2-2' }}</span>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-main btn-sm" (click)="verDetalles(cotizacion)">
+                                <i class="bi bi-eye-fill me-1"></i> Ver detalles
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <!-- Mensaje cuando no hay cotizaciones -->
+    <div *ngIf="cotizacionesPendientes.length === 0" class="text-center mt-2">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill me-2"></i> No tienes cotizaciones pendientes :)
+        </div>
+    </div>
+</div><br><br>
+
+<!-- Modal de Detalles -->
+<ng-template #detallesModal let-modal>
+    <div class="modal-header bg-main text-white rounded-top-4">
+        <h5 class="modal-title">Detalles de la Cotización</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body" style="background-color: #f8f9fa;">
+        <!-- Detalles de la cotización -->
+        <div class="card border-main rounded-4">
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <h5 class="text-main">{{ cotizacionSeleccionada?.producto }}</h5>
+                    <h4 class="fw-bold text-main">${{ cotizacionSeleccionada?.totalVenta | number:'1.2-2' }}</h4>
+                    <p class="text-muted">Fecha: {{ cotizacionSeleccionada?.fechaCotizacion | date:'medium' }}</p>
+                </div>
+
+                <h6 class="fw-bold text-main">Materiales incluidos:</h6>
+                <div class="list-group">
+                    <div class="list-group-item bg-light rounded-3 mb-2"
+                        *ngFor="let detalle of cotizacionSeleccionada?.detalles">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>{{ detalle.material }}</span>
+                            <div class="text-end">
+                                <div class="text-main">${{ (detalle.cantidad * detalle.costoPromedioAlMomento) |
+                                    number:'1.2-2' }}</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer bg-light rounded-bottom-4">
+        <button type="button" class="btn btn-outline-secondary rounded-pill"
+            (click)="modal.dismiss('Cancelar')">Cerrar</button>
+        <button type="button" class="btn btn-danger rounded-pill" (click)="solicitarCancelacion()">Cancelar</button>
+        <button type="button" class="btn btn-success rounded-pill" (click)="solicitarPago()">Pagar</button>
+    </div>
+</ng-template>
+
+<!-- Modal de Confirmación para Cancelar -->
+<ng-template #confirmCancelModal let-modal>
+    <div class="modal-header bg-main text-white rounded-top-4">
+        <h5 class="modal-title">Confirmar Cancelación</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cancelar')"></button>
+    </div>
+    <div class="modal-body">
+        <p>¿Está seguro que desea cancelar esta cotización? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary rounded-pill" (click)="modal.dismiss('Cancelar')">Volver</button>
+        <button type="button" class="btn btn-danger rounded-pill" (click)="confirmarCancelacion()">Confirmar
+            Cancelación</button>
+    </div>
+</ng-template>
+
+<!-- Modal de Pago -->
+<ng-template #pagoModal let-modal>
+    <div class="modal-header bg-main text-white rounded-top-4">
+        <h5 class="modal-title">Procesar Pago - Cotización #{{ cotizacionSeleccionada?.idCotizacion }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="procesarPago()">
+            <div class="mb-3">
+                <label class="form-label">Total a Pagar</label>
+                <input type="text" class="form-control"
+                    [value]="'$' + (cotizacionSeleccionada?.totalVenta | number:'1.2-2')" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Número de Tarjeta</label>
+                <input type="text" class="form-control" [(ngModel)]="datosPago.numeroTarjeta" name="numeroTarjeta"
+                    placeholder="1234 5678 9012 3456" required>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Fecha Expiración</label>
+                    <input type="text" class="form-control" [(ngModel)]="datosPago.fechaExpiracion"
+                        name="fechaExpiracion" placeholder="MM/YY" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">CVV</label>
+                    <input type="text" class="form-control" [(ngModel)]="datosPago.cvv" name="cvv" placeholder="123"
+                        required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre en la Tarjeta</label>
+                <input type="text" class="form-control" [(ngModel)]="datosPago.nombreTitular" name="nombreTitular"
+                    placeholder="Nombre como aparece en la tarjeta" required>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    (click)="modal.dismiss('Cancelar')">Cancelar</button>
+                <button type="submit" class="btn btn-success rounded-pill">Confirmar Pago</button>
+            </div>
+        </form>
+    </div>
+</ng-template>

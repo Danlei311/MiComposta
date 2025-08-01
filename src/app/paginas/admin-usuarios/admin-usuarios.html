@@ -1,98 +1,120 @@
 <div class="container mt-5">
-    <h3 class="text-center" style="color: #254635;">Administración de Usuarios</h3><br>
+  <h3 class="text-center" style="color: #254635;">Administración de Usuarios</h3><br>
+  <h4 class="text-center mb-4" style="color: #254635;">Solicitudes de Cotización</h4>
 
-    <!-- Barra de búsqueda -->
-    <div class="row mb-3">
-        <div class="col-md-3 mx-auto">
-            <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="filterUsuarios()" placeholder="Buscar ..." style="max-width: 300px;"/>
+  <!-- Lista de solicitudes -->
+  <div class="row">
+    <div *ngFor="let solicitud of solicitudes" class="col-md-6 mb-4">
+      <div class="card solicitud-card rounded-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Solicitud de Cotización: {{ solicitud.usuario.nombre }} {{ solicitud.usuario.apellido
+            }}</h5>
+          <p class="card-text">
+            <strong>Producto:</strong> {{ solicitud.cotizaciones[0]?.producto }}<br>
+            <strong>Total:</strong> ${{ solicitud.cotizaciones[0]?.totalVenta | number:'1.2-2' }}
+          </p>
+          <button class="btn btn-main rounded-pill" (click)="verDetalles(solicitud)">
+            Ver Detalles
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Botón Registrar -->
-    <div class="row mb-3">
-        <div class="col-md-12 text-end">
-            <button class="btn btn-success" (click)="open(registroModal)">Registrar</button>
-        </div>
+  <!-- Barra de búsqueda -->
+  <br>
+  <h4 class="text-center mb-4" style="color: #254635;">Control de Usuarios</h4>
+  <div class="row mb-3">
+    <div class="col-md-3 mx-auto">
+      <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="filterUsuarios()"
+        placeholder="Buscar ..." style="max-width: 300px;" />
     </div>
+  </div>
 
-    <!-- Tabla de usuarios -->
-    <table class="table table-bordered">
-        <thead class="bg-dark text-light">
-            <tr>
-                <th>Nombre</th>
-                <th>Correo Electrónico</th>
-                <th>Teléfono</th>
-                <th>Rol</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of filteredUsuarios">
-                <td>{{ user.nombre }} {{ user.apellido }}</td>
-                <td>{{ user.correo }}</td>
-                <td>{{ user.telefono }}</td>
-                <td>{{ user.rol }}</td>
-                <td>
-                    <button class="btn btn-warning me-2" (click)="editUser(user)">Editar</button>
-                    <button class="btn btn-danger" (click)="openDeleteConfirmation(user)">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
+  <!-- Botón Registrar -->
+  <div class="row mb-3">
+    <div class="col-md-12 text-end">
+      <button class="btn btn-success" (click)="open(registroModal)">Registrar</button>
+    </div>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <table class="table table-bordered">
+    <thead class="bg-dark text-light">
+      <tr>
+        <th>Nombre</th>
+        <th>Correo Electrónico</th>
+        <th>Teléfono</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsuarios">
+        <td>{{ user.nombre }} {{ user.apellido }}</td>
+        <td>{{ user.correo }}</td>
+        <td>{{ user.telefono }}</td>
+        <td>{{ user.rol }}</td>
+        <td>
+          <button class="btn btn-warning me-2" (click)="editUser(user)">Editar</button>
+          <button class="btn btn-danger" (click)="openDeleteConfirmation(user)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
 </div>
 
 <!-- Modal para registrar usuario -->
 <ng-template #registroModal let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title" id="registroModalLabel">Registrar Nuevo Usuario</h5>
-        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-        <!-- Formulario de registro -->
-        <form (ngSubmit)="registrarUsuario()">
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" [(ngModel)]="nombre" name="nombre" required />
-            </div>
-            <div class="mb-3">
-                <label for="apellido" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="apellido" [(ngModel)]="apellido" name="apellido" required />
-            </div>
-            <div class="mb-3">
-                <label for="correo" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="correo" [(ngModel)]="correo" name="correo" required />
-            </div>
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telefono" [(ngModel)]="telefono" name="telefono" required />
-            </div>
-            <div class="mb-3">
-                <label for="rol" class="form-label">Rol</label>
-                <select class="form-select" id="rol" [(ngModel)]="rol" name="rol" required>
-                    <option value="Administrador">Administrador</option>
-                    <option value="Cliente">Cliente</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="contraseña" class="form-label">Contraseña (opcional)</label>
-                <input type="password" class="form-control" id="contraseña" [(ngModel)]="contrasena"
-                    name="contraseña" />
-            </div>
+  <div class="modal-header">
+    <h5 class="modal-title" id="registroModalLabel">Registrar Nuevo Usuario</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Formulario de registro -->
+    <form (ngSubmit)="registrarUsuario()">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" [(ngModel)]="nombre" name="nombre" required />
+      </div>
+      <div class="mb-3">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="apellido" [(ngModel)]="apellido" name="apellido" required />
+      </div>
+      <div class="mb-3">
+        <label for="correo" class="form-label">Correo Electrónico</label>
+        <input type="email" class="form-control" id="correo" [(ngModel)]="correo" name="correo" required />
+      </div>
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input type="text" class="form-control" id="telefono" [(ngModel)]="telefono" name="telefono" required />
+      </div>
+      <div class="mb-3">
+        <label for="rol" class="form-label">Rol</label>
+        <select class="form-select" id="rol" [(ngModel)]="rol" name="rol" required>
+          <option value="Administrador">Administrador</option>
+          <option value="Cliente">Cliente</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="contraseña" class="form-label">Contraseña (opcional)</label>
+        <input type="password" class="form-control" id="contraseña" [(ngModel)]="contrasena" name="contraseña" />
+      </div>
 
-            <div *ngIf="successMessage" class="alert alert-success">
-                {{ successMessage }}
-            </div>
-            <div *ngIf="errorMessage" class="alert alert-danger">
-                {{ errorMessage }}
-            </div>
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Registrar</button>
-            </div>
-        </form>
-    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </form>
+  </div>
 </ng-template>
 
 <!-- Modal de confirmación para eliminar usuario -->
@@ -125,7 +147,8 @@
       </div>
       <div class="mb-3">
         <label for="apellido" class="form-label">Apellido</label>
-        <input type="text" class="form-control" id="apellido" [(ngModel)]="selectedUser.apellido" name="apellido" required />
+        <input type="text" class="form-control" id="apellido" [(ngModel)]="selectedUser.apellido" name="apellido"
+          required />
       </div>
       <div class="mb-3">
         <label for="correo" class="form-label">Correo Electrónico</label>
@@ -133,7 +156,8 @@
       </div>
       <div class="mb-3">
         <label for="telefono" class="form-label">Teléfono</label>
-        <input type="text" class="form-control" id="telefono" [(ngModel)]="selectedUser.telefono" name="telefono" required />
+        <input type="text" class="form-control" id="telefono" [(ngModel)]="selectedUser.telefono" name="telefono"
+          required />
       </div>
       <div class="mb-3">
         <label for="rol" class="form-label">Rol</label>
@@ -158,3 +182,71 @@
   </div>
 </ng-template>
 
+<!-- Modal de Detalles -->
+<ng-template #detallesModal let-modal>
+  <div class="modal-header bg-main text-white rounded-top-4">
+    <h5 class="modal-title">Detalles de la Solicitud</h5>
+    <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body" style="background-color: #f8f9fa;">
+    <!-- Datos del cliente -->
+    <div class="card border-main mb-4 rounded-4">
+      <div class="card-body">
+        <h6 class="card-title text-main fw-bold">Datos del Cliente</h6>
+        <div class="mb-2">
+          <span class="fw-bold">Nombre:</span> {{ solicitudSeleccionada?.usuario.nombre }} {{
+          solicitudSeleccionada?.usuario.apellido }}
+        </div>
+        <div class="mb-2">
+          <span class="fw-bold">Correo:</span> {{ solicitudSeleccionada?.usuario.correo }}
+        </div>
+        <div>
+          <span class="fw-bold">Teléfono:</span> {{ solicitudSeleccionada?.usuario.telefono }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles de la cotización -->
+    <div class="card border-main rounded-4">
+      <div class="card-body">
+        <h6 class="card-title text-main fw-bold">Detalles de la Cotización</h6>
+        <div class="text-center mb-3">
+          <h5 class="text-main">{{ solicitudSeleccionada?.cotizaciones[0]?.producto }}</h5>
+          <h4 class="fw-bold text-main">${{ solicitudSeleccionada?.cotizaciones[0]?.totalVenta | number:'1.2-2' }}</h4>
+        </div>
+
+        <h6 class="fw-bold text-main">Materiales incluidos:</h6>
+        <div class="list-group">
+          <div class="list-group-item bg-light rounded-3 mb-2"
+            *ngFor="let material of solicitudSeleccionada?.cotizaciones[0]?.detalles">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>{{ material.material }} (x{{ material.cantidad }})</span>
+              <span class="text-main">${{ material.costoPromedioAlMomento | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer bg-light rounded-bottom-4">
+    <button type="button" class="btn btn-outline-secondary rounded-pill"
+      (click)="modal.dismiss('Cancelar')">Cerrar</button>
+    <button type="button" class="btn btn-danger rounded-pill" (click)="rechazarSolicitud()">Rechazar</button>
+    <button type="button" class="btn btn-success rounded-pill" (click)="aprobarSolicitud()">Aprobar</button>
+  </div>
+</ng-template>
+
+<!-- Modal de Confirmación para Aprobar/Rechazar -->
+<ng-template #confirmActionModal let-modal>
+  <div class="modal-header bg-main text-white rounded-top-4">
+    <h5 class="modal-title">{{ modalTitle }}</h5>
+    <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cancelar')"></button>
+  </div>
+  <div class="modal-body">
+    <p>{{ modalMessage }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary rounded-pill" (click)="modal.dismiss('Cancelar')">Cancelar</button>
+    <button type="button" class="btn btn-primary rounded-pill" (click)="confirmAction()">Confirmar</button>
+  </div>
+</ng-template>

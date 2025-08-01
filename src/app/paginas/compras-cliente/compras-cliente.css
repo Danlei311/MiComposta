@@ -1,0 +1,145 @@
+/* Reutiliza los estilos del componente de administración */
+.solicitud-card {
+    background-color: #F4F0E4;
+    border: 3px solid #254635;
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.solicitud-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.btn-main {
+    background-color: #254635;
+    color: white;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-main:hover {
+    background-color: #1a3528;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Estilos específicos para el formulario de pago */
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: #254635;
+    box-shadow: 0 0 0 0.25rem rgba(37, 70, 53, 0.25);
+}
+
+/* Ajustes para los modales */
+.modal-content {
+    border-radius: 1rem !important;
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: #254635;
+    color: white;
+}
+
+/* Estilos para los botones de acción */
+.btn-outline-secondary {
+    border-color: #254635;
+    color: #254635;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #254635;
+    color: white;
+}
+
+/* Estilos para las tarjetas de cotización */
+.cotizacion-card {
+    border-radius: 0.75rem;
+    border: 1px solid rgba(37, 70, 53, 0.15);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.cotizacion-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(37, 70, 53, 0.1);
+    border-color: rgba(37, 70, 53, 0.3);
+}
+
+.cotizacion-card .card-header {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    padding: 0.75rem 1rem;
+}
+
+.cotizacion-card .card-body {
+    padding: 1.25rem;
+}
+
+/* Estilos para el badge de estado */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .cotizacion-card .card-body {
+        padding: 1rem;
+    }
+}
+
+.card-header {
+    background-color: #254635;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+/* Estilo para el mensaje de "no hay cotizaciones" */
+.alert-info {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #254635;
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 0.75rem;
+}
+
+/* Centrado dinámico para tarjetas */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Ajustes específicos para diferentes cantidades */
+@media (min-width: 768px) {
+    .single-card {
+        flex: 0 0 50%;
+        max-width: 50%;
+        margin-left: 25%;
+    }
+    
+    .double-card {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* Asegura que las tarjetas no sean demasiado anchas */
+.cotizacion-card {
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+/* Ajustes responsivos para móviles */
+@media (max-width: 767px) {
+    .cotizacion-card {
+        max-width: 100%;
+    }
+}
