@@ -1,0 +1,50 @@
+<p class="profile-subtitle">Aquí puedes ver y editar tu información personal y de seguridad.</p>
+<div class="form-container">
+
+    <div *ngIf="mensajeExito" class="alert alert-success">
+        {{ mensajeExito }}
+    </div>
+
+    <form #infoForm="ngForm" (ngSubmit)="actualizarInfo()" novalidate>
+        <div class="form-group">
+            <label>Nombre(s)</label>
+            <input type="text" name="nombre" [(ngModel)]="cliente.nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                #nombre="ngModel" />
+            <div *ngIf="nombre.invalid && nombre.touched" class="text-danger">
+                <small *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</small>
+                <small *ngIf="nombre.errors?.['pattern']">Sólo se permiten letras y acentos.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Apellidos</label>
+            <input type="text" name="apellido" [(ngModel)]="cliente.apellido" required
+                pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" #apellido="ngModel" />
+            <div *ngIf="apellido.invalid && apellido.touched" class="text-danger">
+                <small *ngIf="apellido.errors?.['required']">El apellido es obligatorio.</small>
+                <small *ngIf="apellido.errors?.['pattern']">Sólo se permiten letras y acentos.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" [(ngModel)]="cliente.email" required email #email="ngModel" />
+            <div *ngIf="email.invalid && email.touched" class="text-danger">
+                <small *ngIf="email.errors?.['required']">El correo es obligatorio.</small>
+                <small *ngIf="email.errors?.['email']">Formato de correo inválido.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" name="telefono" [(ngModel)]="cliente.telefono" required pattern="^[0-9]{10}$"
+                #telefono="ngModel" />
+            <div *ngIf="telefono.invalid && telefono.touched" class="text-danger">
+                <small *ngIf="telefono.errors?.['required']">El teléfono es obligatorio.</small>
+                <small *ngIf="telefono.errors?.['pattern']">Debe contener exactamente 10 números.</small>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button" [disabled]="infoForm.invalid">Actualizar información</button>
+    </form>
+</div>

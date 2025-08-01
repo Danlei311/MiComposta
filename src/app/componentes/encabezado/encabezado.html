@@ -40,6 +40,7 @@
                 </ul>
             </div>
             <!--Enlaces de Cliente-->
+            <a *ngIf="isCliente" routerLink="/perfilInicio" class="nav-link custom-link">Inicio</a>
             <a *ngIf="isCliente" routerLink="/perfil" class="nav-link custom-link">Perfil</a>
             <a *ngIf="isCliente" routerLink="/compras" class="nav-link custom-link">Compras</a>
 
