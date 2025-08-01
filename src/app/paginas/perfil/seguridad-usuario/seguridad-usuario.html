@@ -1,0 +1,69 @@
+<p class="profile-subtitle">Aquí se puede realizar el cambio de contraseña. Una contraseña con 8 caracteres.</p>
+<div class="form-container">
+
+    <div *ngIf="mensajeCambio" class="alert alert-success">
+        {{ mensajeCambio }}
+    </div>
+
+    <div *ngIf="errorCambio" class="alert alert-danger">
+        {{ errorCambio }}
+    </div>
+
+    <form #passwordForm="ngForm" (ngSubmit)="cambiarContrasena()" novalidate>
+
+        <div class="form-group">
+            <label for="current-password">Contraseña actual</label>
+            <div class="password-input-container">
+                <input [type]="verActual ? 'text' : 'password'" id="current-password" name="currentPassword"
+                    [(ngModel)]="currentPassword" required #currentPass="ngModel" />
+                <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility('actual')"
+                    [attr.aria-label]="verActual ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <i class="{{ verActual ? 'eye-icon eye-off' : 'eye-icon eye-on' }}"></i>
+                </button>
+            </div>
+            <div *ngIf="currentPass.invalid && currentPass.touched" class="text-danger">
+                <small>La contraseña actual es obligatoria.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="new-password">Nueva contraseña</label>
+            <div class="password-input-container">
+                <input [type]="verNueva ? 'text' : 'password'" id="new-password" name="newPassword"
+                    [(ngModel)]="newPassword" required minlength="8" #newPass="ngModel" />
+                <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility('nueva')"
+                    [attr.aria-label]="verNueva ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <i class="{{ verNueva ? 'eye-icon eye-off' : 'eye-icon eye-on' }}"></i>
+                </button>
+            </div>
+            <div *ngIf="newPass.invalid && newPass.touched" class="text-danger">
+                <small *ngIf="newPass.errors?.['required']">La nueva contraseña es obligatoria.</small>
+                <small *ngIf="newPass.errors?.['minlength']">Debe tener al menos 8 caracteres.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm-password">Confirmar nueva contraseña</label>
+            <div class="password-input-container">
+                <input [type]="verConfirmar ? 'text' : 'password'" id="confirm-password" name="confirmPassword"
+                    [(ngModel)]="confirmPassword" required #confirmPass="ngModel" />
+                <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility('confirmar')"
+                    [attr.aria-label]="verConfirmar ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <i class="{{ verConfirmar ? 'eye-icon eye-off' : 'eye-icon eye-on' }}"></i>
+                </button>
+            </div>
+            <div *ngIf="confirmPass.invalid && confirmPass.touched" class="text-danger">
+                <small>La confirmación es obligatoria.</small>
+            </div>
+
+            <div *ngIf="newPassword && confirmPassword && newPassword !== confirmPassword" class="text-danger">
+                <small>Las contraseñas no coinciden.</small>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button"
+            [disabled]="passwordForm.invalid || newPassword !== confirmPassword">
+            Cambiar contraseña
+        </button>
+    </form>
+</div>

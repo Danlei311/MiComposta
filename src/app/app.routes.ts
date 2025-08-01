@@ -11,6 +11,8 @@ import { AdminComprasProveedores } from './paginas/admin-compras-proveedores/adm
 import { Materiales } from './paginas/materiales/materiales';
 import { Productos } from './paginas/productos/productos';
 import { PerfilInicio } from './paginas/perfil-inicio/perfil-inicio';
+import { DatosUsuario } from './paginas/perfil/datos-usuario/datos-usuario';
+import { SeguridadUsuario } from './paginas/perfil/seguridad-usuario/seguridad-usuario';
 
 export const routes: Routes = [
     { path: '', component: Inicio },
@@ -25,5 +27,7 @@ export const routes: Routes = [
     { path: 'productos', component: Productos },
     { path: 'perfil', component: Perfil },
     { path: 'perfilInicio', component: PerfilInicio },
+    { path: 'datosUsuario',  component: DatosUsuario},
+    {path: 'seguridad', component: SeguridadUsuario},
     { path: '**', redirectTo: '' }
 ];
