@@ -32,5 +32,29 @@ export class Usuarios {
   updateUser(user: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/Administrador/updateUser/${user.idUsuario}`, user);
   }
-  
+
+  getUsuariosPendientes(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/Administrador/getUsuariosPendientes`);
+  }
+
+  aprobarUsuario(idUsuario: number, data: any): Observable<any> {
+    return this.http.put<any>(
+      `${this.apiUrl}/Administrador/procesarSolicitud/${idUsuario}`,
+      {
+        IdCotizacion: data.idCotizacion,
+        Accion: 'aprobar'
+      }
+    );
+  }
+
+  rechazarUsuario(idUsuario: number, data: any): Observable<any> {
+    return this.http.put<any>(
+      `${this.apiUrl}/Administrador/procesarSolicitud/${idUsuario}`,
+      {
+        IdCotizacion: data.idCotizacion,
+        Accion: 'rechazar'
+      }
+    );
+  }
+
 }

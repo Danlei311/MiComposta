@@ -5,6 +5,7 @@ import { RegisterRequest } from '../../interfaces/register-request';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RegisterResponse } from '../../interfaces/register-response';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-usuarios',
@@ -26,15 +27,24 @@ export class AdminUsuarios implements OnInit {
   filteredUsuarios: any[] = [];  // Aquí guardamos los usuarios filtrados
   selectedUser: any = null;
 
+  solicitudes: any[] = [];
+  solicitudSeleccionada: any = null;
+
+  modalTitle: string = '';
+  modalMessage: string = '';
+  actionType: 'aprobar' | 'rechazar' | null = null;
 
   constructor(private usuarioService: Usuarios, private modalService: NgbModal) { }
 
   @ViewChild('confirmDeleteModal') confirmDeleteModal!: TemplateRef<any>;
   @ViewChild('editUserModal') editUserModal!: TemplateRef<any>;
+  @ViewChild('detallesModal') detallesModal!: TemplateRef<any>;
+  @ViewChild('confirmActionModal') confirmActionModal!: TemplateRef<any>;
 
 
   ngOnInit(): void {
     this.obtenerUsuarios();  // Al cargar el componente, obtenemos los usuarios
+    this.cargarSolicitudes();
   }
 
   // Método para abrir el modal
@@ -184,5 +194,133 @@ export class AdminUsuarios implements OnInit {
   editUser(user: any): void {
     console.log('Editar usuario:', user);
     this.openEditModal(user);  // Abre el modal de edición
+  }
+
+  // Método para cargar las solicitudes de los usuarios ---------------------------------
+  cargarSolicitudes(): void {
+    this.usuarioService.getUsuariosPendientes().subscribe({
+      next: (response) => {
+        this.solicitudes = response;
+      },
+      error: (err) => {
+        console.error('Error al cargar solicitudes:', err);
+      }
+    });
+  }
+
+  verDetalles(solicitud: any): void {
+    this.solicitudSeleccionada = solicitud;
+    console.log('Solicitud seleccionada:', this.solicitudSeleccionada); // Verifica los datos en consola
+    this.modalService.open(this.detallesModal, { size: 'lg' });
+  }
+
+  // Modifica los métodos aprobarSolicitud y rechazarSolicitud:
+  solicitarConfirmacion(tipo: 'aprobar' | 'rechazar'): void {
+    this.actionType = tipo;
+
+    if (tipo === 'aprobar') {
+      this.modalTitle = 'Confirmar Aprobación';
+      this.modalMessage = '¿Está seguro que desea aprobar esta solicitud? Esto iniciará el proceso de venta.';
+    } else {
+      this.modalTitle = 'Confirmar Rechazo';
+      this.modalMessage = '¿Está seguro que desea rechazar esta solicitud? La cotización será cancelada y el usuario no será activado.';
+    }
+
+    // Cierra el modal de detalles y abre el de confirmación
+    this.modalService.dismissAll();
+    this.modalService.open(this.confirmActionModal);
+  }
+
+  confirmAction(): void {
+    if (!this.actionType || !this.solicitudSeleccionada) return;
+
+    if (this.actionType === 'aprobar') {
+      this.procesarAprobacion();
+    } else {
+      this.procesarRechazo();
+    }
+
+    this.modalService.dismissAll();
+  }
+
+  private procesarAprobacion(): void {
+    const idUsuario = this.solicitudSeleccionada.usuario.idUsuario;
+    const idCotizacion = this.solicitudSeleccionada.cotizaciones[0].idCotizacion;
+
+    Swal.fire({
+      title: 'Procesando aprobación...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.usuarioService.aprobarUsuario(idUsuario, {
+      idCotizacion: idCotizacion
+    }).subscribe({
+      next: (response) => {
+        this.cargarSolicitudes();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Aprobación exitosa!',
+          text: 'Usuario activado y cotización aprobada correctamente.',
+          confirmButtonColor: '#254635'
+        });
+      },
+      error: (err) => {
+        console.error('Error al aprobar solicitud:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error al aprobar la solicitud.',
+          confirmButtonColor: '#254635'
+        });
+      }
+    });
+  }
+
+  private procesarRechazo(): void {
+    const idUsuario = this.solicitudSeleccionada.usuario.idUsuario;
+    const idCotizacion = this.solicitudSeleccionada.cotizaciones[0].idCotizacion;
+
+    Swal.fire({
+      title: 'Procesando rechazo...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.usuarioService.rechazarUsuario(idUsuario, {
+      idCotizacion: idCotizacion
+    }).subscribe({
+      next: (response) => {
+        this.cargarSolicitudes();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Rechazo exitoso!',
+          text: 'Cotización rechazada correctamente.',
+          confirmButtonColor: '#254635'
+        });
+      },
+      error: (err) => {
+        console.error('Error al rechazar solicitud:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error al rechazar la solicitud.',
+          confirmButtonColor: '#254635'
+        });
+      }
+    });
+  }
+
+  // Actualiza los botones en el modal de detalles para que usen solicitarConfirmacion
+  aprobarSolicitud(): void {
+    this.solicitarConfirmacion('aprobar');
+  }
+
+  rechazarSolicitud(): void {
+    this.solicitarConfirmacion('rechazar');
   }
 }

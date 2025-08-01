@@ -13,6 +13,8 @@ import { Productos } from './paginas/productos/productos';
 import { PerfilInicio } from './paginas/perfil-inicio/perfil-inicio';
 import { DatosUsuario } from './paginas/perfil/datos-usuario/datos-usuario';
 import { SeguridadUsuario } from './paginas/perfil/seguridad-usuario/seguridad-usuario';
+import { ComprasCliente } from './paginas/compras-cliente/compras-cliente';
+import { Ventas } from './paginas/ventas/ventas';
 
 export const routes: Routes = [
     { path: '', component: Inicio },
@@ -20,6 +22,7 @@ export const routes: Routes = [
     { path: 'contacto', component: Contacto },
     { path: 'login', component: Login },
     { path: 'dashboard', component: Dashboard },
+    { path: 'ventas', component: Ventas },
     { path: 'adminUsuarios', component: AdminUsuarios },
     { path: 'proveedores', component: AdminProveedores },
     { path: 'comprasProveedores', component: AdminComprasProveedores },
@@ -29,5 +32,6 @@ export const routes: Routes = [
     { path: 'perfilInicio', component: PerfilInicio },
     { path: 'datosUsuario',  component: DatosUsuario},
     {path: 'seguridad', component: SeguridadUsuario},
+    { path: 'comprasCliente', component: ComprasCliente },
     { path: '**', redirectTo: '' }
 ];
