@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CotizacionServicio } from '../../services/cotizacion-servicio';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contacto',
@@ -12,22 +14,24 @@ import { FormsModule } from '@angular/forms';
 })
 export class Contacto implements OnInit {
 
-  productos: any[] = [];  // Para almacenar los productos obtenidos
-  materiales: any[] = [];  // Para almacenar los materiales del producto seleccionado
-  selectedProducto: number = 0;  // Para almacenar el producto seleccionado
-  selectedMateriales: any[] = [];  // Para almacenar los materiales seleccionados
+  productos: any[] = [];
+  materiales: any[] = [];
+  selectedProducto: any = null;
+  usuario = { nombre: '', apellido: '', correo: '', telefono: '' };
+  cotizacionPrevia: any = null;
 
-  constructor(private cotizacionService: CotizacionServicio) { }
+  @ViewChild('cotizacionModal') cotizacionModal!: TemplateRef<any>;
+
+  constructor(private cotizacionService: CotizacionServicio, private modalService: NgbModal) { }
 
   ngOnInit(): void {
-    this.obtenerProductos();  // Al iniciar, obtener los productos
+    this.obtenerProductos(); // Cargar productos desde el backend
   }
 
-  // Obtener los productos y sus materiales
-  obtenerProductos() {
-    this.cotizacionService.getProductosConMateriales().subscribe({
+  obtenerProductos(): void {
+    this.cotizacionService.getProductosYMateriales().subscribe({
       next: (response) => {
-        this.productos = response;  // Guardamos los productos
+        this.productos = response;
       },
       error: (err) => {
         console.error('Error al obtener los productos:', err);
@@ -35,30 +39,136 @@ export class Contacto implements OnInit {
     });
   }
 
-  // Cargar materiales al seleccionar un producto
-  cargarMateriales() {
-    const productoSeleccionado = this.productos.find(p => p.IdProducto === this.selectedProducto);
+  cargarMateriales(): void {
+    // Convertir selectedProducto a número
+    const id = Number(this.selectedProducto); // <-- Convertir a número
+
+    // Encontrar el producto seleccionado
+    const productoSeleccionado = this.productos.find(p => p.idProducto === id);
     if (productoSeleccionado) {
-      this.materiales = productoSeleccionado.Materiales;
+      // Filtrar solo los materiales no obligatorios
+      this.materiales = productoSeleccionado.materiales.map((material: any) => ({
+        ...material,
+        selected: false // Inicializamos 'selected' como false
+      }));
     }
   }
 
-  // Agregar o eliminar materiales seleccionados
-  toggleMaterial(idMaterial: number) {
-    if (this.selectedMateriales.includes(idMaterial)) {
-      this.selectedMateriales = this.selectedMateriales.filter(m => m !== idMaterial);
-    } else {
-      this.selectedMateriales.push(idMaterial);
+  cotizar(): void {
+    if (!this.selectedProducto) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Selección requerida',
+        text: 'Por favor selecciona un producto',
+        confirmButtonColor: '#254635'
+      });
+      return;
     }
-  }
 
-  // Realizar la cotización (puedes manejar los datos como desees)
-  realizarCotizacion() {
-    const cotizacion = {
-      productoId: this.selectedProducto,
-      materiales: this.selectedMateriales
+    // Validar datos del usuario
+    if (!this.usuario.nombre || !this.usuario.correo || !this.usuario.telefono || !this.usuario.apellido) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Datos incompletos',
+        text: 'Por favor completa todos tus datos',
+        confirmButtonColor: '#254635'
+      });
+      return;
+    }
+
+    // Validación específica para el correo
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!this.usuario.correo || !emailRegex.test(this.usuario.correo)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo inválido',
+        text: 'Por favor ingresa un correo electrónico válido',
+        confirmButtonColor: '#254635'
+      });
+      return;
+    }
+
+    const materialesSeleccionados = this.materiales
+      .filter(m => m.selected)
+      .map(m => ({ idMaterial: m.idMaterial, cantidad: 1 }));
+
+    const request = {
+      idProducto: Number(this.selectedProducto),
+      materialesSeleccionados: materialesSeleccionados
     };
-    console.log('Cotización:', cotizacion);
-    // Aquí puedes hacer la lógica para enviar la cotización al backend si es necesario
+
+    this.cotizacionService.calcularCotizacionPrevia(request).subscribe({
+      next: (response) => {
+        this.cotizacionPrevia = response;
+        this.mostrarModalCotizacion();
+      },
+      error: (err) => {
+        console.error('Error al calcular cotización:', err);
+        alert('Error al calcular la cotización');
+      }
+    });
   }
+
+  mostrarModalCotizacion(): void {
+    const modalRef = this.modalService.open(this.cotizacionModal, { size: 'lg' });
+
+    modalRef.result.then((result) => {
+      if (result === 'Confirmar') {
+        this.confirmarCotizacion();
+      }
+    }, (reason) => {
+      console.log('Modal cerrado:', reason);
+    });
+  }
+
+  confirmarCotizacion(): void {
+    // Usamos directamente los materiales de la cotización previa
+    const materialesParaGuardar = this.cotizacionPrevia.materiales.map((m: any) => ({
+      idMaterial: m.idMaterial,
+      cantidad: m.cantidad,
+      costoUnitario: m.costoUnitario
+    }));
+
+    const cotizacionData = {
+      idProducto: this.cotizacionPrevia.idProducto,
+      nombre: this.usuario.nombre,
+      apellido: this.usuario.apellido,
+      correo: this.usuario.correo,
+      telefono: this.usuario.telefono,
+      costoProduccion: this.cotizacionPrevia.costoProduccion,
+      precioVenta: this.cotizacionPrevia.precioVenta,
+      materiales: materialesParaGuardar
+    };
+
+    this.cotizacionService.realizarCotizacion(cotizacionData).subscribe({
+      next: (response) => {
+        this.modalService.dismissAll();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message || 'Cotización registrada con éxito',
+          confirmButtonColor: '#254635',
+          timer: 6000
+        });
+        this.resetForm();
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.error?.message || 'Error al registrar la cotización',
+          confirmButtonColor: '#254635'
+        });
+      }
+    });
+  }
+
+  // Método para resetear el formulario
+  resetForm(): void {
+    this.usuario = { nombre: '', apellido: '', correo: '', telefono: '' };
+    this.selectedProducto = null;
+    this.materiales = [];
+    this.cotizacionPrevia = null;
+  }
+
 }

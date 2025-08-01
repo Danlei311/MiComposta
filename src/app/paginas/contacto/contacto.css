@@ -42,3 +42,79 @@
   object-position: center; /* Centra la imagen dentro del cuadro */
 }
 
+/* Estilos para el modal de cotización */
+.bg-main {
+  background-color: #254635;
+}
+
+.text-main {
+  color: #254635;
+}
+
+.border-main {
+  border-color: #254635 !important;
+}
+
+.btn-outline-main {
+  color: #254635;
+  border-color: #254635;
+}
+
+.btn-outline-main:hover {
+  background-color: #254635;
+  color: white;
+}
+
+.bg-main {
+  background-color: #254635;
+  color: white;
+}
+
+.bg-main:hover {
+  background-color: #1e3c2c;
+  color: white;
+}
+
+.badge.bg-main {
+  background-color: #254635;
+}
+
+/* Estilo para el modal */
+.modal-content {
+  border: 1px solid #254635;
+}
+
+/* Estilo para los inputs en modales */
+.modal-body .form-control,
+.modal-body .form-select {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+}
+
+.modal-body .form-label {
+  font-weight: 500;
+  color: #254635;
+}
+
+/* Estilo para el mensaje de advertencia */
+.alert-warning.small {
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  background-color: #fff3cd;
+  color: #664d03;
+  border-left: 3px solid #ffc107;
+}
+
+.bi-exclamation-triangle-fill {
+  color: #664d03;
+}
+
+/* Agrega esto a tu archivo contacto.css */
+.text-danger {
+  color: #dc3545;
+  font-size: 0.8rem;
+}
+
+input.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}

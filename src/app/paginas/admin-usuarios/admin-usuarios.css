@@ -38,3 +38,78 @@
 .btn-danger {
   margin-left: 10px; /* Separar los botones */
 }
+
+
+/* Estilos generales */
+.bg-main {
+    background-color: #254635;
+}
+
+.text-main {
+    color: #254635;
+}
+
+.border-main {
+    border-color: #254635 !important;
+}
+
+/* Tarjeta de solicitud */
+.solicitud-card {
+    background-color: #F4F0E4;
+    border: 3px solid #254635;
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.solicitud-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Botones */
+.btn-main {
+    background-color: #254635;
+    color: white;
+    border: none;
+}
+
+.btn-main:hover {
+    background-color: #1a3528;
+    color: white;
+}
+
+/* Bordes redondeados */
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+.rounded-top-4 {
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+.rounded-bottom-4 {
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+
+/* Modal */
+.modal-content {
+    border-radius: 1rem !important;
+    overflow: hidden;
+}
+
+/* Estilos para el modal de confirmación */
+.modal-confirm .modal-header {
+  background-color: #254635;
+  color: white;
+}
+
+.modal-confirm .btn-primary {
+  background-color: #254635;
+  border: none;
+}
+
+.modal-confirm .btn-primary:hover {
+  background-color: #1a3528;
+}

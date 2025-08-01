@@ -39,10 +39,11 @@
                     <li><a class="dropdown-item" routerLink="/productos">Control de Productos</a></li>
                 </ul>
             </div>
+            <a *ngIf="isAdmin" routerLink="/ventas" class="nav-link custom-link">Ventas</a>
             <!--Enlaces de Cliente-->
             <a *ngIf="isCliente" routerLink="/perfilInicio" class="nav-link custom-link">Inicio</a>
             <a *ngIf="isCliente" routerLink="/perfil" class="nav-link custom-link">Perfil</a>
-            <a *ngIf="isCliente" routerLink="/compras" class="nav-link custom-link">Compras</a>
+            <a *ngIf="isCliente" routerLink="/comprasCliente" class="nav-link custom-link">Compras</a>
 
             <!-- Botón de login o logout -->
             <a *ngIf="mostrarLogin" class="btn custom-btn" routerLink="/login">Iniciar Sesión</a>

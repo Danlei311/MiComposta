@@ -1,0 +1,160 @@
+.venta-card {
+    border-radius: 0.75rem;
+    border: 1px solid rgba(37, 70, 53, 0.15);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-width: 540px;
+}
+
+.venta-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(37, 70, 53, 0.1);
+    border-color: rgba(37, 70, 53, 0.3);
+}
+
+.venta-card .card-header {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    padding: 0.75rem 1.25rem;
+}
+
+.venta-card .card-body {
+    padding: 1.25rem;
+}
+
+.bg-main {
+    background-color: #254635 !important;
+}
+
+.text-main {
+    color: #254635 !important;
+}
+
+.btn-main {
+    background-color: #254635;
+    color: white;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-main:hover {
+    background-color: #1a3528;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .venta-card {
+        max-width: 100%;
+    }
+
+    .venta-card .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Estilo para el mensaje de "no hay cotizaciones" */
+.alert-info {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #254635;
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 0.75rem;
+}
+
+/* Estilos para las pestañas */
+.nav-tabs .nav-link {
+    color: #254635;
+    border-color: #dee2e6 #dee2e6 #254635;
+}
+
+.nav-tabs .nav-link.active {
+    color: white;
+    background-color: #254635;
+    border-color: #254635 #254635 #254635;
+}
+
+/* Estilos para la tabla */
+.table-responsive {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    vertical-align: middle;
+    padding: 0.75rem;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    background-color: #f8f9fa;
+}
+
+/* Estilos para filas alternas */
+.table tbody tr:nth-child(even) td {
+    background-color: #e9ecef;
+}
+
+/* Estilos para hover */
+.table tbody tr:hover td {
+    background-color: #dee2e6;
+}
+
+/* Estilos para el modal de detalles */
+.modal-body .card {
+    border: 1px solid rgba(37, 70, 53, 0.2);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .table-responsive {
+        border: none;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 1rem;
+        color: #254635;
+    }
+
+    .table tbody td:last-child {
+        border-bottom: none;
+    }
+}
+
+.btn-info {
+    background-color: #254635;
+    border-color: #254635;
+    color: white;
+}
+
+.encabezado-table{
+    background-color: #254635;
+    color: white;
+    font-weight: bold;
+}
