@@ -7,21 +7,27 @@
     <h6 class="fw-bold">Datos</h6>
     <div class="row mb-3">
       <div class="col-md-4">
-        <input type="text" class="form-control" placeholder="Nombre">
+        <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="usuario.nombre">
       </div>
       <div class="col-md-4">
-        <input type="text" class="form-control" placeholder="Apellido">
+        <input type="text" class="form-control" placeholder="Apellido" [(ngModel)]="usuario.apellido">
       </div>
       <div class="col-md-4">
-        <input type="email" class="form-control" placeholder="Correo">
+        <input type="email" class="form-control" placeholder="Correo" [(ngModel)]="usuario.correo" required
+          #correo="ngModel" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+        <div *ngIf="correo.invalid && (correo.dirty || correo.touched)" class="text-danger small mt-1">
+          <div *ngIf="correo.errors?.['required']">El correo es requerido</div>
+          <div *ngIf="correo.errors?.['pattern']">Formato de correo inválido (ejemplo: usuario&#64;dominio.com)</div>
+        </div>
       </div>
+
     </div>
     <div class="row mb-4">
       <div class="col-md-4">
-        <input type="tel" class="form-control" placeholder="Teléfono">
+        <input type="tel" class="form-control" placeholder="Teléfono" [(ngModel)]="usuario.telefono">
       </div>
       <div class="col-md-4">
-        <select class="form-select" [(ngModel)]="selectedProducto" (change)="cargarMateriales()">
+        <select class="form-select" [(ngModel)]="selectedProducto" (change)="cargarMateriales()" #selectProd>
           <option selected disabled>Selecciona un producto</option>
           <option *ngFor="let producto of productos" [value]="producto.idProducto">{{ producto.nombre }}</option>
         </select>
@@ -30,14 +36,19 @@
 
     <!-- Materiales asociados al producto -->
     <h6 class="fw-bold">Complementos</h6>
-    <div class="row align-items-center mb-4">
+    <div class="d-flex flex-wrap mb-4">
       <div *ngFor="let material of materiales" class="col-auto">
-        <input class="form-check-input" type="checkbox" [id]="material.IdMaterial" (change)="toggleMaterial(material.IdMaterial)">
-        <label class="form-check-label" [for]="material.IdMaterial">{{ material.NombreMaterial }} ({{ material.Unidad }})</label>
+        <!-- Mostrar solo los materiales no obligatorios con checkbox -->
+        <div *ngIf="!material.obligatorio">
+          <input class="form-check-input me-2" type="checkbox" [(ngModel)]="material.selected">
+          <label class="form-check-label me-4">{{ material.nombreVenta }}</label>
+        </div>
       </div>
     </div>
+
+
     <div class="col-auto ms-auto">
-      <button class="btn btn-main" (click)="realizarCotizacion()">Realizar Cotización</button>
+      <button class="btn btn-main" (click)="cotizar()">Realizar Cotización</button>
     </div>
   </div>
 </section>
@@ -65,3 +76,61 @@
   </div>
 </section>
 
+<!-- Modal de Cotización -->
+<ng-template #cotizacionModal let-modal>
+  <div class="modal-header bg-main text-white">
+    <h5 class="modal-title">Resumen de Cotización</h5>
+    <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body" style="background-color: #f8f9fa;">
+    <div class="text-center mb-4">
+      <h4 class="text-main">{{ cotizacionPrevia.producto }}</h4>
+      <h3 class="fw-bold text-main">${{ cotizacionPrevia.precioVenta | number:'1.2-2' }}</h3>
+    </div>
+
+    <div class="mb-4">
+      <h6 class="fw-bold text-main">Materiales incluidos:</h6>
+      <div class="list-group">
+        <div class="list-group-item bg-light" *ngFor="let material of cotizacionPrevia.materiales">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>{{ material.nombreMaterial }}</span>
+            <span class="badge bg-main rounded-pill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z" />
+              </svg></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card border-main mt-4">
+      <div class="card-body">
+        <h6 class="card-title text-main fw-bold">Datos del cliente</h6>
+        <div class="mb-2">
+          <span class="fw-bold">Nombre:</span> {{ usuario.nombre }} {{ usuario.apellido }}
+        </div>
+        <div class="mb-2">
+          <span class="fw-bold">Correo:</span> {{ usuario.correo }}
+        </div>
+        <div>
+          <span class="fw-bold">Teléfono:</span> {{ usuario.telefono }}
+        </div>
+      </div>
+    </div>
+    <!-- Mensaje de confirmación añadido -->
+    <div class="alert alert-warning mt-3 p-2 small border-warning">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
+        <path
+          d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+      </svg>
+      Al confirmar, aceptas los términos de la cotización y se procederá con el proceso de compra.
+    </div>
+  </div>
+  <div class="modal-footer bg-light">
+    <button type="button" class="btn btn-outline-main" (click)="modal.dismiss('Cancelar')">Cancelar</button>
+    <button type="button" class="btn bg-main text-white" (click)="modal.close('Confirmar')">Confirmar
+      Cotización</button>
+  </div>
+</ng-template>
