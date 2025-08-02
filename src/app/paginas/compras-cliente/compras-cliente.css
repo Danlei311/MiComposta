@@ -143,3 +143,54 @@
         max-width: 100%;
     }
 }
+
+
+/* Estilos para la nueva sección de compras */
+.accordion-item {
+    border-radius: 0.75rem !important;
+    overflow: hidden;
+    border: 1px solid rgba(37, 70, 53, 0.2);
+}
+
+.accordion-button {
+    font-weight: 500;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+    color: #254635;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(37, 70, 53, 0.3);
+}
+
+.accordion-body {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 0 0 0.75rem 0.75rem;
+}
+
+.border-main {
+    border-color: rgba(37, 70, 53, 0.3) !important;
+}
+
+/* Estilos para el modal de comentarios */
+.modal-comentario .form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+}
+
+.modal-comentario textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+/* Estilos para la tarjeta de comentario existente */
+.card-comentario {
+    border-left: 4px solid #254635;
+    background-color: #f8f9fa;
+}
