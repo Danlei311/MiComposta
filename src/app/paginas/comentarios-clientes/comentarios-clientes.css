@@ -1,0 +1,86 @@
+/* Estilo de la tabla y el modal */
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table th {
+  background-color: #254635; 
+  color: white;
+}
+
+.table td {
+  background-color: #F4F0E4;
+}
+
+/* Estilo para el botón de Registrar */
+.btn-success {
+  background-color: #254635;
+  border: none;
+}
+
+/* Estilo para el modal */
+.modal-header {
+  background-color: #254635;
+  color: white;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #F4F0E4;
+  color: #254635;
+}
+
+/* Estilo para los botones */
+.btn-warning {
+  margin-right: 10px; /* Separar los botones */
+}
+
+.btn-danger {
+  margin-left: 10px; /* Separar los botones */
+}
+
+/* Estilo para el texto del comprador */
+td small {
+  color: #6c757d;
+  font-size: 0.8em;
+}
+
+/* Estilos para los radio buttons */
+.btn-group {
+    margin-bottom: 15px;
+}
+
+.btn-check:checked + .btn-outline-secondary {
+    background-color: #254635;
+    color: white;
+}
+
+.btn-outline-secondary {
+    color: #254635;
+    border-color: #254635;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    color: #254635;
+}
+
+/* Asegurar que la tabla ocupe todo el ancho */
+.table {
+    width: 100%;
+}
+
+/* Estilos para los botones de acción */
+.btn-success {
+    background-color: #254635;
+    border-color: #254635;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-success:hover, .btn-danger:hover {
+    opacity: 0.8;
+}

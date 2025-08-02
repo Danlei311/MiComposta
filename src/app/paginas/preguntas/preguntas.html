@@ -161,44 +161,24 @@
 <!-- Comentarios -->
 <section class="py-5 text-center">
   <div class="container">
-    <h4 class="main-color fw-bold mb-4">Comentarios</h4>
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-3">
-        <div class="comentario-card p-3 h-100">
-          <h6><strong>Nombre Completo</strong></h6>
-          <div class="estrellas mb-2">
-            ★★★★★
+    <h4 class="main-color fw-bold mb-4">Comentarios de nuestros clientes</h4>
+    <div class="row justify-content-center">
+      <ng-container *ngFor="let comentario of comentarios; let i = index">
+        <!-- Nueva fila cada 4 elementos -->
+        <div *ngIf="i % 4 === 0" class="w-100"></div>
+        
+        <!-- Tarjeta de comentario -->
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="comentario-card p-3 h-100">
+            <h6><strong>{{comentario.nombreCompleto}}</strong></h6>
+            <div class="estrellas mb-2">
+              {{getStars(comentario.valoracion)}}
+            </div>
+            <p class="text-muted small">{{comentario.nombreProducto}}</p>
+            <p class="text-start">{{comentario.textoComentario}}</p>
           </div>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
         </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="comentario-card p-3 h-100">
-          <h6><strong>Nombre Completo</strong></h6>
-          <div class="estrellas mb-2">
-            ★★★★★
-          </div>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="comentario-card p-3 h-100">
-          <h6><strong>Nombre Completo</strong></h6>
-          <div class="estrellas mb-2">
-            ★★★★★
-          </div>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="comentario-card p-3 h-100">
-          <h6><strong>Nombre Completo</strong></h6>
-          <div class="estrellas mb-2">
-            ★★★★★
-          </div>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>
-        </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 </section>
