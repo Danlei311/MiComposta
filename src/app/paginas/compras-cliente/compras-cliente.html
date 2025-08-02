@@ -42,6 +42,64 @@
             <i class="bi bi-info-circle-fill me-2"></i> No tienes cotizaciones pendientes :)
         </div>
     </div>
+
+    <!-- Nueva sección de Mis Compras -->
+    <div class="mt-5">
+        <h3 class="text-center" style="color: #254635;">Mis Compras</h3>
+        <p class="text-center text-muted mb-4">Accede a toda la documentación y recursos de tus productos</p>
+
+        <!-- Acordeón de compras -->
+        <div class="accordion" id="comprasAccordion">
+            <div class="accordion-item mb-3 border-main" *ngFor="let compra of misCompras; let i = index">
+                <h2 class="accordion-header" [id]="'heading' + i">
+                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="i === 0 ? 'true' : 'false'"
+                        [attr.aria-controls]="'collapse' + i">
+                        <div class="d-flex justify-content-between w-100">
+                            <div>
+                                <h5 class="mb-1 text-main">{{compra.productoNombre}}</h5>
+                                <div>
+                                    <small class="text-muted me-3">Orden #{{compra.idVenta}}</small>
+                                    <small class="text-muted">Fecha: {{compra.fechaVenta | date:'shortDate'}}</small>
+                                </div>
+                            </div>
+                            <button class="btn btn-main btn-sm" (click)="abrirModalComentario($event, compra)">
+                                <i class="bi bi-chat-left-text me-1"></i> Dejar comentario
+                            </button>
+                        </div>
+                    </button>
+                </h2>
+                <div [id]="'collapse' + i" class="accordion-collapse collapse" [class.show]="i === 0"
+                    [attr.aria-labelledby]="'heading' + i" data-bs-parent="#comprasAccordion">
+                    <div class="accordion-body">
+                        <!-- Sección de comentario existente -->
+                        <div class="card mb-4" *ngIf="compra.comentario">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge bg-success me-2">✅</span>
+                                    <h6 class="mb-0">Mi opinión</h6>
+                                </div>
+                                <p class="card-text">{{compra.comentario.texto}}</p>
+                                <small class="text-muted">Reseña del {{compra.comentario.fecha | date:'dd/MM/yyyy'}}</small>
+                            </div>
+                        </div>
+
+                        <!-- Placeholder para cuando no hay comentario -->
+                        <div class="text-center py-4" *ngIf="!compra.comentario">
+                            <p class="text-muted">No has dejado un comentario sobre este producto aún.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje cuando no hay compras -->
+        <div *ngIf="misCompras.length === 0" class="text-center mt-4">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle-fill me-2"></i> No tienes compras registradas
+            </div>
+        </div>
+    </div>
 </div><br><br>
 
 <!-- Modal de Detalles -->
@@ -146,5 +204,36 @@
                 <button type="submit" class="btn btn-success rounded-pill">Confirmar Pago</button>
             </div>
         </form>
+    </div>
+</ng-template>
+
+<!-- Modal para dejar comentario -->
+<ng-template #comentarioModal let-modal>
+    <div class="modal-header bg-main text-white rounded-top-4">
+        <h5 class="modal-title">Dejar comentario</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="mb-3">
+                <label class="form-label">Producto</label>
+                <input type="text" class="form-control" [value]="compraSeleccionada?.productoNombre" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tu comentario</label>
+                <textarea class="form-control" rows="5" placeholder="Escribe tu experiencia con este producto..."
+                    [(ngModel)]="nuevoComentario.texto" name="textoComentario"></textarea>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="recomendar" [(ngModel)]="nuevoComentario.recomendado" name="recomendado">
+                <label class="form-check-label" for="recomendar">
+                    Recomendar este producto
+                </label>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary rounded-pill" (click)="modal.dismiss('Cancelar')">Cancelar</button>
+        <button type="button" class="btn btn-main rounded-pill" (click)="guardarComentario()">Guardar Comentario</button>
     </div>
 </ng-template>

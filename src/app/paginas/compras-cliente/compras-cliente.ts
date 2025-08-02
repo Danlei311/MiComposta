@@ -22,9 +22,18 @@ export class ComprasCliente implements OnInit {
     nombreTitular: ''
   };
 
+  misCompras: any[] = [];
+  compraSeleccionada: any = null;
+  nuevoComentario: any = {
+    texto: '',
+    recomendado: true,
+    fecha: new Date()
+  };
+
   @ViewChild('detallesModal') detallesModal!: TemplateRef<any>;
   @ViewChild('confirmCancelModal') confirmCancelModal!: TemplateRef<any>;
   @ViewChild('pagoModal') pagoModal!: TemplateRef<any>;
+  @ViewChild('comentarioModal') comentarioModal!: TemplateRef<any>;
 
   constructor(
     private comprasService: ClienteComprasServicio,
@@ -33,6 +42,7 @@ export class ComprasCliente implements OnInit {
 
   ngOnInit(): void {
     this.cargarCotizacionesPendientes();
+    this.cargarMisCompras();
   }
 
   cargarCotizacionesPendientes(): void {
@@ -194,5 +204,60 @@ export class ComprasCliente implements OnInit {
       cvv: '',
       nombreTitular: ''
     };
+  }
+
+
+  // Cargar las compras del cliente ------------------------------
+  cargarMisCompras(): void {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    this.comprasService.getVentasPorUsuario(parseInt(userId)).subscribe({
+      next: (compras) => {
+        this.misCompras = compras.map((compra:any) => ({
+          ...compra,
+          // Datos de ejemplo para comentarios (remover cuando tengas el endpoint real)
+          comentario: compra.idVenta % 2 === 0 ? {
+            texto: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            fecha: new Date(),
+            recomendado: true
+          } : null
+        }));
+      },
+      error: (err) => {
+        console.error('Error al cargar compras:', err);
+      }
+    });
+  }
+
+  abrirModalComentario(event: Event, compra: any): void {
+    event.stopPropagation(); // Evita que el acordeón se cierre/al abrir
+    this.compraSeleccionada = compra;
+    this.nuevoComentario = {
+      texto: '',
+      recomendado: true,
+      fecha: new Date()
+    };
+    this.modalService.open(this.comentarioModal);
+  }
+
+  guardarComentario(): void {
+    // Lógica para guardar el comentario (implementar cuando tengas el endpoint)
+    console.log('Guardando comentario:', this.nuevoComentario);
+    
+    // Ejemplo de actualización local
+    const compraIndex = this.misCompras.findIndex(c => c.idVenta === this.compraSeleccionada.idVenta);
+    if (compraIndex !== -1) {
+      this.misCompras[compraIndex].comentario = {...this.nuevoComentario};
+    }
+    
+    this.modalService.dismissAll();
+    Swal.fire({
+      icon: 'success',
+      title: '¡Comentario guardado!',
+      text: 'Gracias por compartir tu opinión',
+      confirmButtonColor: '#254635',
+      timer: 2000
+    });
   }
 }

@@ -23,4 +23,12 @@ export class ClienteComprasServicio {
   procesarPago(datosPago: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/ClienteCompras/procesarPago`, datosPago);
   }
+
+  getVentasPorUsuario(idUsuario: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/ClienteCompras/misCompras/${idUsuario}`);
+  }
+
+  guardarComentario(comentario: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/ClienteCompras/guardarComentario`, comentario);
+  }
 }
