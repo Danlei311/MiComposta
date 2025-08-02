@@ -80,6 +80,10 @@
     padding: 1.25rem;
 }
 
+.card-body{
+    background-color: #F4F0E4;
+}
+
 /* Estilos para el badge de estado */
 .badge {
     font-size: 0.75rem;
@@ -189,8 +193,80 @@
     resize: vertical;
 }
 
-/* Estilos para la tarjeta de comentario existente */
+
+
+/* Estilos para el sistema de valoración */
+.rating {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.rating span {
+    margin-right: 0.5rem;
+    transition: all 0.2s;
+}
+
+.rating span:hover {
+    transform: scale(1.2);
+}
+
+/* Estilos para la tarjeta de comentario */
 .card-comentario {
     border-left: 4px solid #254635;
     background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+/* Estilos para el badge de estado */
+.badge-estado {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+}
+
+.badge-pendiente {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-visible {
+    background-color: #198754;
+    color: #fff;
+}
+
+/* Estilos para el sistema de valoración */
+.rating-stars {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.rating-stars span {
+    cursor: pointer;
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+    color: #ddd; /* Color de estrellas no seleccionadas */
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.rating-stars span.active {
+    color: #254635; /* Color de estrellas seleccionadas (amarillo) */
+}
+
+.rating-stars span:hover {
+    transform: scale(1.2);
+}
+
+.rating-stars i {
+    display: inline-block;
+}
+
+/* Asegúrate que los iconos de estrellas tengan el tamaño correcto */
+.bi-star-fill, .bi-star {
+    font-size: 1.5rem;
+    color: #254635; 
+}
+
+.text-warning-estrellas {
+    color: #254635; /* Color de estrellas seleccionadas */
 }

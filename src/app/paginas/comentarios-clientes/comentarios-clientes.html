@@ -1,0 +1,82 @@
+<div class="container mt-5">
+    <h3 class="text-center" style="color: #254635;">Administración de Comentarios</h3><br>
+
+    <!-- Filtros -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="btn-group" role="group" aria-label="Filtro por estado">
+                <input type="radio" class="btn-check" name="estadoFilter" id="filterPendiente" 
+                       [(ngModel)]="estadoFiltro" value="Pendiente" (change)="filtrarPorEstado()" checked>
+                <label class="btn btn-outline-secondary" for="filterPendiente">Pendientes</label>
+
+                <input type="radio" class="btn-check" name="estadoFilter" id="filterVisible" 
+                       [(ngModel)]="estadoFiltro" value="Visible" (change)="filtrarPorEstado()">
+                <label class="btn btn-outline-secondary" for="filterVisible">Visibles</label>
+
+                <input type="radio" class="btn-check" name="estadoFilter" id="filterOculto" 
+                       [(ngModel)]="estadoFiltro" value="Oculto" (change)="filtrarPorEstado()">
+                <label class="btn btn-outline-secondary" for="filterOculto">Ocultos</label>
+            </div>
+        </div>
+        
+        <!-- Barra de búsqueda -->
+        <div class="col-md-6">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="filterComentarios()"
+                placeholder="Buscar ..." style="max-width: 300px; float: right;" />
+        </div>
+    </div>
+
+    <!-- Tabla de comentarios -->
+    <table class="table table-bordered">
+        <thead class="bg-dark text-light">
+            <tr>
+                <th>ID Venta</th>
+                <th>Producto</th>
+                <th>Comprador</th>
+                <th>Comentario</th>
+                <th>Fecha</th>
+                <th>Valoración</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let comentario of filteredComentarios">
+                <td>{{ comentario.idVenta }}</td>
+                <td>{{ comentario.nombreProducto }}</td>
+                <td>
+                    {{ comentario.comprador.nombre }} {{ comentario.comprador.apellido }}<br>
+                    <small>{{ comentario.comprador.correo }}</small>
+                </td>
+                <td>{{ comentario.texto }}</td>
+                <td>{{ comentario.fechaComentario | date:'dd/MM/yyyy' }}</td>
+                <td>{{ comentario.valoracion }}/5</td>
+                <td>{{ comentario.estado }}</td>
+                <td>
+                    <!-- Estado Pendiente: muestra ambos botones -->
+                    <button *ngIf="comentario.estado === 'Pendiente'" class="btn btn-success me-2" 
+                            (click)="cambiarEstadoComentario(comentario.idComentario, 'Visible')">
+                        Mostrar
+                    </button>
+                    <button *ngIf="comentario.estado === 'Pendiente'" class="btn btn-danger" 
+                            (click)="cambiarEstadoComentario(comentario.idComentario, 'Oculto')">
+                        Ocultar
+                    </button>
+
+                    <!-- Estado Visible: solo muestra ocultar -->
+                    <button *ngIf="comentario.estado === 'Visible'" class="btn btn-danger" 
+                            (click)="cambiarEstadoComentario(comentario.idComentario, 'Oculto')">
+                        Ocultar
+                    </button>
+
+                    <!-- Estado Oculto: solo muestra mostrar -->
+                    <button *ngIf="comentario.estado === 'Oculto'" class="btn btn-success" 
+                            (click)="cambiarEstadoComentario(comentario.idComentario, 'Visible')">
+                        Mostrar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+</div>

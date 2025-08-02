@@ -15,6 +15,7 @@ import { DatosUsuario } from './paginas/perfil/datos-usuario/datos-usuario';
 import { SeguridadUsuario } from './paginas/perfil/seguridad-usuario/seguridad-usuario';
 import { ComprasCliente } from './paginas/compras-cliente/compras-cliente';
 import { Ventas } from './paginas/ventas/ventas';
+import { ComentariosClientes } from './paginas/comentarios-clientes/comentarios-clientes';
 
 export const routes: Routes = [
     { path: '', component: Inicio },
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'ventas', component: Ventas },
     { path: 'adminUsuarios', component: AdminUsuarios },
     { path: 'proveedores', component: AdminProveedores },
+    { path: 'controlComentarios', component: ComentariosClientes },
     { path: 'comprasProveedores', component: AdminComprasProveedores },
     { path: 'materiales', component: Materiales },
     { path: 'productos', component: Productos },

@@ -63,9 +63,7 @@
                                     <small class="text-muted">Fecha: {{compra.fechaVenta | date:'shortDate'}}</small>
                                 </div>
                             </div>
-                            <button class="btn btn-main btn-sm" (click)="abrirModalComentario($event, compra)">
-                                <i class="bi bi-chat-left-text me-1"></i> Dejar comentario
-                            </button>
+
                         </div>
                     </button>
                 </h2>
@@ -73,20 +71,36 @@
                     [attr.aria-labelledby]="'heading' + i" data-bs-parent="#comprasAccordion">
                     <div class="accordion-body">
                         <!-- Sección de comentario existente -->
-                        <div class="card mb-4" *ngIf="compra.comentario">
+                        <div *ngIf="compra.tieneComentario" class="card mb-4 card-comentario">
                             <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-success me-2">✅</span>
-                                    <h6 class="mb-0">Mi opinión</h6>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rating">
+                                            <span *ngFor="let star of [1,2,3,4,5]"
+                                                [class.text-warning]="star <= compra.valoracion">
+                                                <i class="bi" [class.bi-star-fill]="star <= compra.valoracion"
+                                                    [class.bi-star]="star > compra.valoracion"></i>
+                                            </span>
+                                        </div>
+                                        <h6 class="mb-0 ms-2">Mi opinión</h6>
+                                    </div>
+                                    <span class="badge" [class.bg-warning]="compra.estadoComentario === 'Pendiente'"
+                                        [class.bg-success]="compra.estadoComentario === 'Visible'"
+                                        [class.bg-secondary]="compra.estadoComentario === 'Sin comentario'">
+                                        {{ compra.estadoComentario }}
+                                    </span>
                                 </div>
-                                <p class="card-text">{{compra.comentario.texto}}</p>
-                                <small class="text-muted">Reseña del {{compra.comentario.fecha | date:'dd/MM/yyyy'}}</small>
+                                <p class="card-text">{{ compra.comentario }}</p>
+                                <small class="text-muted">Valoración: {{ compra.valoracion }}/5</small>
                             </div>
                         </div>
 
-                        <!-- Placeholder para cuando no hay comentario -->
-                        <div class="text-center py-4" *ngIf="!compra.comentario">
-                            <p class="text-muted">No has dejado un comentario sobre este producto aún.</p>
+                        <!-- Sección cuando no hay comentario -->
+                        <div *ngIf="!compra.tieneComentario" class="text-center py-4">
+                            <p class="text-muted mb-3">No has dejado un comentario sobre este producto aún.</p>
+                            <button class="btn btn-main btn-sm" (click)="abrirModalComentario($event, compra)">
+                                <i class="bi bi-chat-left-text me-1"></i> Dejar comentario
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -219,21 +233,34 @@
                 <label class="form-label">Producto</label>
                 <input type="text" class="form-control" [value]="compraSeleccionada?.productoNombre" readonly>
             </div>
+
+            <!-- Sistema de valoración por estrellas - Versión mejorada -->
+            <div class="mb-3">
+                <label class="form-label">Valoración</label>
+                <div class="rating-stars">
+                    <span *ngFor="let star of [1,2,3,4,5]" (click)="nuevoComentario.valoracion = star"
+                        [class.active]="star <= nuevoComentario.valoracion">
+                        <i class="bi bi-star-fill" *ngIf="star <= nuevoComentario.valoracion"></i>
+                        <i class="bi bi-star" *ngIf="star > nuevoComentario.valoracion"></i>
+                    </span>
+                </div>
+                <small class="text-muted d-block mt-1">Selecciona de 1 a 5 estrellas</small>
+                <small *ngIf="nuevoComentario.valoracion > 0" class="text-success">
+                    Seleccionaste: {{ nuevoComentario.valoracion }} estrella(s)
+                </small>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Tu comentario</label>
                 <textarea class="form-control" rows="5" placeholder="Escribe tu experiencia con este producto..."
-                    [(ngModel)]="nuevoComentario.texto" name="textoComentario"></textarea>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="recomendar" [(ngModel)]="nuevoComentario.recomendado" name="recomendado">
-                <label class="form-check-label" for="recomendar">
-                    Recomendar este producto
-                </label>
+                    [(ngModel)]="nuevoComentario.texto" name="textoComentario" required></textarea>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary rounded-pill" (click)="modal.dismiss('Cancelar')">Cancelar</button>
-        <button type="button" class="btn btn-main rounded-pill" (click)="guardarComentario()">Guardar Comentario</button>
+        <button type="button" class="btn btn-outline-secondary rounded-pill"
+            (click)="modal.dismiss('Cross click')">Cancelar</button>
+        <button type="button" class="btn btn-main rounded-pill" (click)="guardarComentario()">Guardar
+            Comentario</button>
     </div>
 </ng-template>

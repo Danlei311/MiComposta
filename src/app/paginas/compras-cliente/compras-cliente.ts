@@ -26,8 +26,9 @@ export class ComprasCliente implements OnInit {
   compraSeleccionada: any = null;
   nuevoComentario: any = {
     texto: '',
-    recomendado: true,
-    fecha: new Date()
+    valoracion: 0,
+    idUsuario: 0,
+    idVenta: 0
   };
 
   @ViewChild('detallesModal') detallesModal!: TemplateRef<any>;
@@ -214,14 +215,10 @@ export class ComprasCliente implements OnInit {
 
     this.comprasService.getVentasPorUsuario(parseInt(userId)).subscribe({
       next: (compras) => {
-        this.misCompras = compras.map((compra:any) => ({
+        this.misCompras = compras.map((compra: any) => ({
           ...compra,
-          // Datos de ejemplo para comentarios (remover cuando tengas el endpoint real)
-          comentario: compra.idVenta % 2 === 0 ? {
-            texto: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-            fecha: new Date(),
-            recomendado: true
-          } : null
+          valoracion: compra.valoracion || 0,
+          estadoComentario: compra.estadoComentario || 'Sin comentario'
         }));
       },
       error: (err) => {
@@ -231,33 +228,75 @@ export class ComprasCliente implements OnInit {
   }
 
   abrirModalComentario(event: Event, compra: any): void {
-    event.stopPropagation(); // Evita que el acordeón se cierre/al abrir
+    event.stopPropagation();
     this.compraSeleccionada = compra;
+    const userId = localStorage.getItem('userId');
+
     this.nuevoComentario = {
       texto: '',
-      recomendado: true,
-      fecha: new Date()
+      valoracion: 0, // Inicializa en 0
+      idUsuario: userId ? parseInt(userId) : 0,
+      idVenta: compra.idVenta
     };
+
     this.modalService.open(this.comentarioModal);
   }
 
   guardarComentario(): void {
-    // Lógica para guardar el comentario (implementar cuando tengas el endpoint)
-    console.log('Guardando comentario:', this.nuevoComentario);
-    
-    // Ejemplo de actualización local
-    const compraIndex = this.misCompras.findIndex(c => c.idVenta === this.compraSeleccionada.idVenta);
-    if (compraIndex !== -1) {
-      this.misCompras[compraIndex].comentario = {...this.nuevoComentario};
+    // Validaciones
+    if (!this.nuevoComentario.texto) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor escribe tu comentario',
+        confirmButtonColor: '#254635'
+      });
+      return;
     }
-    
-    this.modalService.dismissAll();
-    Swal.fire({
-      icon: 'success',
-      title: '¡Comentario guardado!',
-      text: 'Gracias por compartir tu opinión',
-      confirmButtonColor: '#254635',
-      timer: 2000
+
+    if (this.nuevoComentario.valoracion < 1 || this.nuevoComentario.valoracion > 5) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor selecciona una valoración entre 1 y 5 estrellas',
+        confirmButtonColor: '#254635'
+      });
+      return;
+    }
+
+    this.comprasService.guardarComentario(this.nuevoComentario).subscribe({
+      next: (response) => {
+        // Actualizar la compra localmente
+        const compraIndex = this.misCompras.findIndex(c => c.idVenta === this.compraSeleccionada.idVenta);
+        if (compraIndex !== -1) {
+          this.misCompras[compraIndex].tieneComentario = true;
+          this.misCompras[compraIndex].comentario = this.nuevoComentario.texto;
+          this.misCompras[compraIndex].valoracion = this.nuevoComentario.valoracion;
+          this.misCompras[compraIndex].estadoComentario = 'Pendiente';
+        }
+
+        this.modalService.dismissAll();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Comentario enviado!',
+          html: `
+            <p>Tu comentario ha sido enviado para revisión.</p>
+            <p class="text-muted small">Estará visible una vez aprobado.</p>
+          `,
+          confirmButtonColor: '#254635',
+          timer: 3000
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo guardar el comentario',
+          confirmButtonColor: '#254635'
+        });
+        console.error('Error al guardar comentario:', err);
+      }
     });
   }
+
 }
