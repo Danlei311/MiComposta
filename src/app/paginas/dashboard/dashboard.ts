@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Chart } from 'chart.js/auto';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
+  nombreUsuario: string ='';
   usuariosActivos = 0;
   inversion = 0;
   ganancias = 0;
@@ -36,9 +38,10 @@ export class Dashboard implements OnInit {
   @ViewChild('ventasChartCanvas') ventasChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('gananciasChartCanvas') gananciasChartCanvas!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService, private authService: Auth) { }
 
   ngOnInit(): void {
+    this.nombreUsuario = localStorage.getItem('nombre') || 'Usuario Administrador';
     this.cargarMetricas();
     this.obtenerTopComprasAltas();
     this.obtenerResumenCotizaciones();
@@ -287,7 +290,6 @@ export class Dashboard implements OnInit {
 
   mostrarGananciasMensuales(): void {
     this.dashboardService.getGananciasMensuales().subscribe(resp => {
-      console.log('Ganancias mensuales:', resp);
       const labels = resp.map((item: any) => `${item.nombreMes} ${item.año}`);
       const ventas = resp.map((item: any) => item.totalVentas);
       const costos = resp.map((item: any) => item.totalCosto);

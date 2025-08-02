@@ -1,142 +1,153 @@
+<!-- Contenedor principal del dashboard -->
 <div class="container mt-5">
-    <div class="container">
-        <h1>Dashboard</h1>
-        <h4>Bienvenido Administrador 👋🏻</h4>
-        <p class="text-muted">Aquí puedes ver un resumen de las métricas más importantes del negocio.</p>
-        <div class="metrics-row">
-            <div class="metric-card">
-                <div class="metric-value">
-                    <span class="metric-icon"></span>
-                    {{ usuariosActivos }}
-                </div>
-                <div class="metric-label">Clientes Activos</div>
-            </div>
+  <div class="container">
+    <h1>Dashboard</h1>
+    <h4>Bienvenido {{ nombreUsuario }} 👋🏻</h4>
+    <p class="text-muted">
+      Aquí puedes ver un resumen de las métricas más importantes del negocio.
+    </p>
 
-            <div class="metric-card">
-                <div class="metric-value">
-                    <span class="metric-icon"></span>
-                    ${{ inversion | number:'1.2-2' }}
-                </div>
-                <div class="metric-label">Capital Invertido</div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-value">
-                    <span class="metric-icon"></span>
-                    ${{ ganancias | number:'1.2-2' }}
-                </div>
-                <div class="metric-label">Ganancias Totales</div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-value">
-                    <span class="metric-icon"></span>
-                    ${{ comprasTotales | number:'1.2-2' }}
-                </div>
-                <div class="metric-label">Total de compras realizadas </div>
-            </div>
-
+    <!-- Métricas -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-value">
+          <span class="metric-icon"></span>
+          {{ usuariosActivos }}
         </div>
+        <div class="metric-label">Clientes Activos</div>
+        <p class="leyenda-p">Muestra los clientes activos</p>
+      </div>
 
-        <div class="metric-card">
-            <div class="dashboard-graficos">
-
-                <!-- Gráfico proveedores a la izquierda -->
-                <section *ngIf="(proveedoresMasComprados?.length || 0) > 0" class="grafico-proveedores">
-                    <h3>Proveedores con más compras</h3>
-                    <div class="barra" *ngFor="let proveedor of proveedoresMasComprados">
-                        <span class="nombre">{{ proveedor.nombre }}</span>
-                        <div class="barra-progreso" [style.width.%]="calcularPorcentaje(proveedor.cantidadCompras)">
-                            {{ proveedor.cantidadCompras }}
-                        </div>
-                        <span class="total-comprado">${{ proveedor.totalComprado | number:'1.0-2' }}</span>
-                    </div>
-                </section>
-
-                <!-- Gráfico tendencia a la derecha -->
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Tendencia de Compras</h5>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label>Desde:</label>
-                                <input type="date" class="form-control" [(ngModel)]="desde" />
-                            </div>
-                            <div class="col-md-4">
-                                <label>Hasta:</label>
-                                <input type="date" class="form-control" [(ngModel)]="hasta" />
-                            </div>
-                            <div class="col-md-4 d-flex align-items-end">
-                                <button class="btn btn-primary w-100"
-                                    (click)="obtenerTendenciaCompras()">Consultar</button>
-                            </div>
-                        </div>
-
-                        <canvas #lineChartCanvas width="400" height="200"></canvas>
-                    </div>
-                </div>
-            </div>
+      <div class="metric-card">
+        <div class="metric-value">
+          <span class="metric-icon"></span>
+          ${{ inversion | number:'1.2-2' }}
         </div>
-        <!-- Tarjeta para detalle de cotizaciones -->
-        <div class="card mt-4">
-            <div class="card-body">
-                <h5 class="card-title">Últimas Cotizaciones ({{ resumenCotizaciones?.totalCotizaciones }})</h5>
+        <div class="metric-label">Capital Invertido</div>
+        <p class="leyenda-p">Muestra la inversión en el negocio</p>
+      </div>
 
-                <div *ngIf="resumenCotizaciones?.cotizaciones?.length > 0; else noData">
-                    <div class="row">
-                        <div class="col-md-6 mb-3" *ngFor="let cot of resumenCotizaciones.cotizaciones">
-                            <div class="card shadow-sm h-100">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted">
-                                        {{ cot.usuario }}
-                                    </h6>
-                                    <p class="mb-1">
-                                        <strong>Fecha:</strong> {{ cot.fecha | date:'mediumDate' }}<br />
-                                        <strong>Estado:</strong>
-                                        <span [ngClass]="estadoColor(cot.estado)" class="badge">{{ cot.estado
-                                            }}</span><br />
-                                        <strong>Total costo:</strong> ${{ cot.totalCosto }}<br />
-                                        <strong>Total venta:</strong> ${{ cot.totalVenta }}<br />
-                                        <strong>Ganancia:</strong>
-                                        <span class="text-success fw-bold">${{ cot.totalVenta - cot.totalCosto
-                                            }}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <ng-template #noData>
-                    <p class="text-muted">No hay cotizaciones recientes.</p>
-                </ng-template>
-            </div>
+      <div class="metric-card">
+        <div class="metric-value">
+          <span class="metric-icon"></span>
+          ${{ ganancias | number:'1.2-2' }}
         </div>
+        <div class="metric-label">Ganancias Totales</div>
+        <p class="leyenda-p">Muestra las ganancias totales obtenidas</p>
+      </div>
 
-        <!-- Tendencia de ventas por mes -->
-        <div class="row mb-3">
-            <div class="col-md-5">
-                <label for="desde">Desde:</label>
-                <input type="month" [(ngModel)]="desde" class="form-control" id="desde" />
-            </div>
-            <div class="col-md-5">
-                <label for="hasta">Hasta:</label>
-                <input type="month" [(ngModel)]="hasta" class="form-control" id="hasta" />
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button class="btn btn-primary w-100" (click)="obtenerTendenciaVentas()">Mostrar</button>
-            </div>
+      <div class="metric-card">
+        <div class="metric-value">
+          <span class="metric-icon"></span>
+          ${{ comprasTotales | number:'1.2-2' }}
         </div>
-
-        <!-- Canvas del gráfico -->
-        <canvas #ventasChartCanvas width="600" height="300"></canvas>
-
-        <!-- Ganancias mensuales -->
-        <h5 class="mt-4">Tendencia de Ganancias Mensuales</h5>
-        <canvas #gananciasChartCanvas width="600" height="300"></canvas>
-
+        <div class="metric-label">Total de compras realizadas</div>
+        <p class="leyenda-p">Muestra el total de compras realizadas</p>
+      </div>
     </div>
 
+    <!-- Gráficos -->
+    <div class="metric-card">
+      <div class="dashboard-graficos">
 
+        <!-- Gráfico proveedores -->
+        <section *ngIf="(proveedoresMasComprados?.length || 0) > 0" class="grafico-proveedores">
+          <h3>Proveedores con más compras</h3>
+            <p class="leyenda-p">Estos son los proveedores con más compras realizadas</p>
+          <div class="barra" *ngFor="let proveedor of proveedoresMasComprados">
+            <span class="nombre">{{ proveedor.nombre }}</span>
+            <div class="barra-progreso" [style.width.%]="calcularPorcentaje(proveedor.cantidadCompras)">
+              {{ proveedor.cantidadCompras }}
+            </div>
+            <span class="total-comprado">${{ proveedor.totalComprado | number:'1.0-2' }}</span>
+          </div>
+        </section>
+
+        <!-- Gráfico tendencia de compras -->
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Tendencia de Compras</h5>
+            <p class="leyenda-p">Esta tendencia muestra las compras que se han realizado a lo largo del tiempo</p>
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label>Desde:</label>
+
+                <input type="date" class="form-control" [(ngModel)]="desde" />
+              </div>
+              <div class="col-md-4">
+                <label>Hasta:</label>
+                
+                <input type="date" class="form-control" [(ngModel)]="hasta" />
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-primary w-100" (click)="obtenerTendenciaCompras()">Consultar</button>
+              </div>
+            </div>
+
+            <canvas #lineChartCanvas width="400" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Últimas cotizaciones -->
+<div class="metric-card mt-4">
+  <h5 class="mb-3">Últimas Cotizaciones ({{ resumenCotizaciones?.totalCotizaciones }})</h5>
+    <p class="leyenda-p">Aquí puedes ver las últimas cotizaciones realizadas por los clientes</p>
+  <div *ngIf="resumenCotizaciones?.cotizaciones?.length > 0; else noData">
+    <div class="row">
+      <div class="col-md-6 mb-4" *ngFor="let cot of resumenCotizaciones.cotizaciones">
+        <div class="cotizacion-card h-100">
+          <h6 class="cotizacion-usuario mb-2 text-muted">
+            {{ cot.usuario }}
+          </h6>
+          <p class="mb-1">
+            <strong>Fecha:</strong> {{ cot.fecha | date:'mediumDate' }}<br />
+            <strong>Estado:</strong>
+            <span [ngClass]="estadoColor(cot.estado)" class="badge">{{ cot.estado }}</span><br />
+            <strong>Total costo:</strong> ${{ cot.totalCosto }}<br />
+            <strong>Total venta:</strong> ${{ cot.totalVenta }}<br />
+            <strong>Ganancia:</strong>
+            <span class="text-success fw-bold">${{ cot.totalVenta - cot.totalCosto }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p class="text-muted">No hay cotizaciones recientes.</p>
+  </ng-template>
+</div>
+
+
+    <!-- Tendencia de ventas por mes -->
+    <div class="metric-card mt-4">
+      <h5 class="mb-3">Tendencia de Ventas por Mes</h5>
+        <p class="leyenda-p">Esta tendencia muestra las ventas que se han realizado a lo largo de los meses</p>
+      <div class="row mb-3">
+        <div class="col-md-5">
+          <label for="desde">Desde:</label>
+          <p class="leyenda-p">Seleccione un mes menor a la fecha final</p>
+          <input type="month" [(ngModel)]="desde" class="form-control" id="desde" />
+        </div>
+        <div class="col-md-5">
+          <label for="hasta">Hasta:</label>
+            <p class="leyenda-p">Seleccione un mes mayor a la fecha inicial</p>
+          <input type="month" [(ngModel)]="hasta" class="form-control" id="hasta" />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary w-100" (click)="obtenerTendenciaVentas()">Mostrar</button>
+        </div>
+      </div>
+      <canvas #ventasChartCanvas width="600" height="300"></canvas>
+    </div>
+
+    <!-- Gráfico de ganancias mensuales -->
+    <div class="metric-card mt-4">
+      <h5 class="mb-3">Tendencia de Ganancias Mensuales</h5>
+      <p class="leyenda-p">Esta tendencia muestra las ganancias que se han obtenido a lo largo de los meses</p>
+      <canvas #gananciasChartCanvas width="600" height="300"></canvas>
+    </div>
+  </div>
 </div>
