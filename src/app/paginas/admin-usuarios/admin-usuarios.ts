@@ -260,6 +260,7 @@ export class AdminUsuarios implements OnInit {
     }).subscribe({
       next: (response) => {
         this.cargarSolicitudes();
+        this.obtenerUsuarios();
         Swal.fire({
           icon: 'success',
           title: '¡Aprobación exitosa!',
