@@ -40,8 +40,10 @@ export class DatosUsuario implements OnInit {
     }).subscribe({
       next: res => {
         this.perfilService.notificarActualizacion();
+        const nuevoNombre = `${this.cliente.nombre} ${this.cliente.apellido}`; // Actualizamos el nombre
+        localStorage.setItem('nombre', nuevoNombre);
         this.mensajeExito = res.message || '¡Datos actualizados con éxito! 🎉';
-        setTimeout(() => this.mensajeExito = '', 3500);
+        setTimeout(() => this.mensajeExito = '', 4500);
       },
       error: err => {
         alert(err.error?.message || 'Error al actualizar datos');

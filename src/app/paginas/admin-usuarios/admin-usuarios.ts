@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Usuarios } from '../../services/usuarios';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterRequest } from '../../interfaces/register-request';
@@ -14,6 +14,8 @@ import Swal from 'sweetalert2';
   styleUrl: './admin-usuarios.css'
 })
 export class AdminUsuarios implements OnInit {
+  @Output() datosActualizados = new EventEmitter<void>();
+  idUsuario: number = 0;
   nombre: string = '';
   apellido: string = '';
   correo: string = '';
@@ -45,6 +47,10 @@ export class AdminUsuarios implements OnInit {
   ngOnInit(): void {
     this.obtenerUsuarios();  // Al cargar el componente, obtenemos los usuarios
     this.cargarSolicitudes();
+
+    const userIdStr = localStorage.getItem('userId');
+    this.idUsuario = userIdStr ? +userIdStr : 0;
+    console.log('ID de usuario cargado:', this.idUsuario);
   }
 
   // Método para abrir el modal
@@ -171,6 +177,9 @@ export class AdminUsuarios implements OnInit {
 
     this.usuarioService.updateUser(updatedUser).subscribe({
       next: () => {
+        const nuevoNombre = `${this.selectedUser.nombre} ${this.selectedUser.apellido}`;
+        localStorage.setItem('nombre', nuevoNombre);
+        this.datosActualizados.emit(); // actualizar el nombre del localStorage
         this.successMessage = 'Usuario actualizado correctamente.';
         setTimeout(() => {
           this.successMessage = '';
