@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Auth } from '../../services/auth';
 
 @Component({
@@ -14,22 +14,33 @@ export class Encabezado implements OnInit, OnDestroy{
   mostrarLogin: boolean = true;
   isAdmin: boolean = false;
   isCliente: boolean = false;
-  private authSubscription: Subscription | undefined;;
+  private authSubscription: Subscription | undefined;
 
   constructor(private router: Router, private authService: Auth) { }
 
   
   ngOnInit(): void {
-    // Suscribirse a los cambios del estado de autenticación
-    this.authSubscription = this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
-      this.mostrarLogin = !isAuthenticated; // Si no está autenticado, muestra el login
-      if (isAuthenticated) {
-        this.checkUserRole(); // Verificar el rol si está autenticado
-      } else {
-        this.isAdmin = false;
-        this.isCliente = false;
-      }
-    });
+    this.checkAuthState();
+    
+    this.authSubscription = this.authService.isAuthenticated$
+      .pipe(distinctUntilChanged())
+      .subscribe(() => {
+        this.checkAuthState();
+      });
+  }
+
+  checkAuthState(): void {
+    const isAuthenticated = this.authService.isAuthenticated();
+    this.mostrarLogin = !isAuthenticated;
+    
+    if (isAuthenticated) {
+      const role = this.authService.getRole();
+      this.isAdmin = role === 'Administrador';
+      this.isCliente = role === 'Cliente';
+    } else {
+      this.isAdmin = false;
+      this.isCliente = false;
+    }
   }
 
   checkUserRole(): void {
@@ -49,10 +60,7 @@ export class Encabezado implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    // Limpiar la suscripción cuando el componente se destruya
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.authSubscription?.unsubscribe();
   }
 
 }

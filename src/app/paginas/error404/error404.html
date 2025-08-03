@@ -1,0 +1,25 @@
+<div class="error-container">
+  <div class="error-content">
+    <div class="error-icon">
+      <i class="fas fa-ban"></i>
+    </div>
+    <h1>Acceso Denegado</h1>
+    <p class="error-message">
+      Lo sentimos, no tienes permisos para acceder a esta sección.
+    </p>
+    <p *ngIf="rolUsuario" class="user-role">
+      Tu rol actual es: <strong>{{ rolUsuario }}</strong>
+    </p>
+    <div class="error-actions">
+      <button class="btn btn-primary" (click)="redirigirInicio()">
+        <i class="fas fa-home"></i> Volver a mi área
+      </button>
+      <button *ngIf="rolUsuario" class="btn btn-secondary" (click)="redirigirLogin()">
+        <i class="fas fa-sign-in-alt"></i> Iniciar sesión con otra cuenta
+      </button>
+      <button *ngIf="!rolUsuario" class="btn btn-secondary" (click)="redirigirLogin()">
+        <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+      </button>
+    </div>
+  </div>
+</div>

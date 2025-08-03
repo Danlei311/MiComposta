@@ -1,0 +1,104 @@
+/* Estilos generales */
+.documentacion-section {
+  background-color: #f8f9fa;
+  min-height: 70vh;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Badges de estado */
+.estado-badge {
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.encontrado-badge {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.sin-documentacion-badge {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Tarjetas específicas */
+.documentacion-card.encontrado {
+  border-top: 4px solid #28a745;
+}
+
+.documentacion-card.sin-documentacion {
+  border-top: 4px solid #ffc107;
+}
+
+.no-encontrado-card {
+  max-width: 600px;
+  margin: 0 auto;
+  border-top: 4px solid #6c757d;
+  background-color: #f8f9fa;
+}
+
+.no-encontrado-card i {
+  color: #6c757d;
+}
+
+/* Contenido de documentación */
+.documentacion-content h5 {
+  color: #254635;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.documentacion-content ul {
+  padding-left: 20px;
+}
+
+.documentacion-content ul li {
+  margin-bottom: 5px;
+}
+
+/* Botones */
+.btn-main {
+  background-color: #254635;
+  color: white;
+  border: none;
+}
+
+.btn-main:hover {
+  background-color: #1a3024;
+  color: white;
+}
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .documentacion-section {
+    padding: 2rem 0;
+  }
+  
+  .card {
+    margin-bottom: 20px;
+  }
+}

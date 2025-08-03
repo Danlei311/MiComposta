@@ -212,11 +212,22 @@ export class Ventas implements OnInit {
   filtrarPorFecha(): void {
     if (this.fechaFiltro) {
       this.ventasFiltradas = this.ventasCompletadas.filter(venta =>
-        new Date(venta.fechaVenta).toISOString().split('T')[0] === this.fechaFiltro
+        this.esMismaFecha(venta.fechaVenta, this.fechaFiltro)
       );
     } else {
       this.ventasFiltradas = [...this.ventasCompletadas];
     }
+  }
+
+  private esMismaFecha(fechaA: string | Date, fechaB: string | Date): boolean {
+    const a = new Date(fechaA);
+    const [yearB, monthB, dayB] = typeof fechaB === 'string'
+      ? fechaB.split('-').map(Number)
+      : [fechaB.getFullYear(), fechaB.getMonth() + 1, fechaB.getDate()];
+
+    return a.getFullYear() === yearB &&
+      (a.getMonth() + 1) === monthB &&
+      a.getDate() === dayB;
   }
 
   mostrarTodasVentas(): void {
