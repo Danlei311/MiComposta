@@ -1,37 +1,95 @@
-/* Sección Preguntas */
+/* Sección Preguntas Frecuentes */
 .seccion-faq {
   background-color: #f4f0e4;
-}
-
-.main-color {
-  color: #254635;
+  padding: 3rem 0;
 }
 
 .accordion-button {
   background-color: white;
   font-weight: bold;
   color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .accordion-button:not(.collapsed) {
   background-color: #e8e6dd;
   color: #254635;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0.125);
 }
 
 .accordion-body {
   font-size: 0.95rem;
   color: #333;
+  background-color: white;
 }
 
 /* Sección Comentarios */
+.main-color {
+  color: #254635;
+  margin-bottom: 2rem;
+}
+
 .comentario-card {
   background-color: #f4f0e4;
   border-radius: 8px;
   color: #333;
   height: 100%;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.comentario-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: #e8e6dd;
 }
 
 .estrellas {
   color: #254635;
   font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+/* Layout y estructura */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -0.75rem;
+}
+
+.row > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Textos dentro de las tarjetas */
+.comentario-card h6 {
+  color: #254635;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.comentario-card p {
+  margin-bottom: 0.5rem;
+}
+
+.comentario-card .small {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Efecto de hover más suave */
+@media (hover: hover) {
+  .comentario-card:hover {
+    transition: all 0.3s ease;
+  }
 }

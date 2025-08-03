@@ -29,6 +29,6 @@ export class ClienteComprasServicio {
   }
 
   guardarComentario(comentario: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/ClienteCompras/guardarComentario`, comentario);
+    return this.http.post<any>(`${this.apiUrl}/ClienteCompras/registrarComentario`, comentario);
   }
 }

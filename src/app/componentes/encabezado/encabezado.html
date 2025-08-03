@@ -21,6 +21,7 @@
              <!--Enlaces de Administrador-->
             <a *ngIf="isAdmin" routerLink="/dashboard" class="nav-link custom-link">Dashboard</a>
             <a *ngIf="isAdmin" routerLink="/adminUsuarios" class="nav-link custom-link">Usuarios</a>
+            <a *ngIf="isAdmin" routerLink="/controlComentarios" class="nav-link custom-link">Comentarios</a>
             <div class="dropdown" *ngIf="isAdmin">
                 <button class="btn btn-link dropdown-toggle" type="button" id="providersDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     Proveedores
@@ -44,6 +45,7 @@
             <a *ngIf="isCliente" routerLink="/perfilInicio" class="nav-link custom-link">Inicio</a>
             <a *ngIf="isCliente" routerLink="/perfil" class="nav-link custom-link">Perfil</a>
             <a *ngIf="isCliente" routerLink="/comprasCliente" class="nav-link custom-link">Compras</a>
+            <a *ngIf="isCliente" routerLink="/documentacion" class="nav-link custom-link">Documentacion</a>
 
             <!-- Botón de login o logout -->
             <a *ngIf="mostrarLogin" class="btn custom-btn" routerLink="/login">Iniciar Sesión</a>
