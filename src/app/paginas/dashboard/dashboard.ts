@@ -23,6 +23,8 @@ export class Dashboard implements OnInit {
   comprasTotales = 0;
   ventasTotales = 0;
   cantidadVentas = 0;
+  valorActualStock = 0;
+  gananciasTotales= 0;
 
   proveedoresMasComprados: any[] = [];
 
@@ -74,9 +76,13 @@ export class Dashboard implements OnInit {
       this.totalActualInventario = resp.saldoCantidadTotalInventario;
     });
 
-    this.dashboardService.getInversion().subscribe(resp => {
-      this.inversion = resp.inversionTotal;
+    this.dashboardService.valorActualStock().subscribe(resp => {
+      this.valorActualStock = resp.valorActual;
     })
+
+    this.dashboardService.getInversionCompraMaterial().subscribe(resp => {
+      this.inversion = resp.inversionTotal;
+    });
 
     this.dashboardService.getResumenVentas().subscribe(resp => {
       this.ventasTotales = resp.totalIngresos;
@@ -89,6 +95,10 @@ export class Dashboard implements OnInit {
         cantidadCompras: proveedor.cantidadCompras,
         totalComprado: proveedor.totalComprado
       }));
+    });
+
+    this.dashboardService.getGananciasTotales().subscribe(resp => {
+      this.gananciasTotales = resp;
     });
 
   }

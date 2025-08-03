@@ -26,7 +26,6 @@ export class DatosUsuario implements OnInit {
   ngOnInit(): void {
     const userIdStr = localStorage.getItem('userId');
     this.idUsuario = userIdStr ? +userIdStr : 0;
-    console.log('ID de usuario cargado:', this.idUsuario);
   }
 
   mensajeExito: string = '';
@@ -50,4 +49,5 @@ export class DatosUsuario implements OnInit {
       }
     });
   }
+  
 }

@@ -15,8 +15,8 @@ export class DashboardService {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getCantClientesActivos`);
   }
 
-  getInversion(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/AdminDashboard/getInversionInventario`)
+  valorActualStock(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/valorActualDelStock`)
   }
 
   getUnidadesEnInventario(): Observable<any> {
@@ -26,7 +26,13 @@ export class DashboardService {
   getResumenVentas() {
     return this.http.get<{ cantidadVentas: number, totalIngresos: number }>(`${this.apiUrl}/AdminDashboard/getResumenVentas`);
   }
+  getInversionCompraMaterial(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getInversionCompras`);
+  }
 
+  getGananciasTotales(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasTotales`);
+  }
 
   getProveedoresMasComprados(): Observable<any> {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getProveedoresMasComprados`);
