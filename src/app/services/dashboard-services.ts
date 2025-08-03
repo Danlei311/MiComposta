@@ -19,13 +19,14 @@ export class DashboardService {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getInversionInventario`)
   }
 
-  getGananciasTotales(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasTotales`);
+  getUnidadesEnInventario(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getResumenInventario`);
   }
 
-  getComprasTotales(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/AdminDashboard/getSumaTotalCompras`);
+  getResumenVentas() {
+    return this.http.get<{ cantidadVentas: number, totalIngresos: number }>(`${this.apiUrl}/AdminDashboard/getResumenVentas`);
   }
+
 
   getProveedoresMasComprados(): Observable<any> {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getProveedoresMasComprados`);
@@ -45,9 +46,9 @@ export class DashboardService {
   getTendenciaVentasPorMes(desde: string, hasta: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getTendenciaVentasPorMes?desde=${desde}&hasta=${hasta}`);
   }
-  
+
   getGananciasMensuales(): Observable<any> {
-  return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasMensuales`);
-}
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasMensuales`);
+  }
 
 }
