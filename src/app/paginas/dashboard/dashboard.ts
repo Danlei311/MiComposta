@@ -14,11 +14,18 @@ import { Auth } from '../../services/auth';
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
-  nombreUsuario: string ='';
+  nombreUsuario: string = '';
   usuariosActivos = 0;
   inversion = 0;
-  ganancias = 0;
+  entradaUnidadesInve = 0;
+  salidaUnidadesInve = 0;
+  totalActualInventario = 0;
   comprasTotales = 0;
+  ventasTotales = 0;
+  cantidadVentas = 0;
+  valorActualStock = 0;
+  gananciasTotales= 0;
+
   proveedoresMasComprados: any[] = [];
 
   desde!: string;
@@ -63,16 +70,23 @@ export class Dashboard implements OnInit {
     const mes = fechaActual.getMonth() + 1;
     const anio = fechaActual.getFullYear();
 
-    this.dashboardService.getGananciasTotales().subscribe(resp => {
-      this.ganancias = resp.gananciaTotal;
+    this.dashboardService.getUnidadesEnInventario().subscribe(resp => {
+      this.entradaUnidadesInve = resp.cantidadTotalEntradas;
+      this.salidaUnidadesInve = resp.cantidadTotalSalidas;
+      this.totalActualInventario = resp.saldoCantidadTotalInventario;
     });
 
-    this.dashboardService.getInversion().subscribe(resp => {
-      this.inversion = resp.inversionTotal;
+    this.dashboardService.valorActualStock().subscribe(resp => {
+      this.valorActualStock = resp.valorActual;
     })
 
-    this.dashboardService.getComprasTotales().subscribe(resp => {
-      this.comprasTotales = resp.sumaTotal;
+    this.dashboardService.getInversionCompraMaterial().subscribe(resp => {
+      this.inversion = resp.inversionTotal;
+    });
+
+    this.dashboardService.getResumenVentas().subscribe(resp => {
+      this.ventasTotales = resp.totalIngresos;
+      this.cantidadVentas = resp.cantidadVentas;
     });
 
     this.dashboardService.getProveedoresMasComprados().subscribe(resp => {
@@ -81,6 +95,10 @@ export class Dashboard implements OnInit {
         cantidadCompras: proveedor.cantidadCompras,
         totalComprado: proveedor.totalComprado
       }));
+    });
+
+    this.dashboardService.getGananciasTotales().subscribe(resp => {
+      this.gananciasTotales = resp;
     });
 
   }

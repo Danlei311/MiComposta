@@ -15,16 +15,23 @@ export class DashboardService {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getCantClientesActivos`);
   }
 
-  getInversion(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/AdminDashboard/getInversionInventario`)
+  valorActualStock(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/valorActualDelStock`)
+  }
+
+  getUnidadesEnInventario(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getResumenInventario`);
+  }
+
+  getResumenVentas() {
+    return this.http.get<{ cantidadVentas: number, totalIngresos: number }>(`${this.apiUrl}/AdminDashboard/getResumenVentas`);
+  }
+  getInversionCompraMaterial(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getInversionCompras`);
   }
 
   getGananciasTotales(): Observable<any> {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasTotales`);
-  }
-
-  getComprasTotales(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/AdminDashboard/getSumaTotalCompras`);
   }
 
   getProveedoresMasComprados(): Observable<any> {
@@ -45,9 +52,9 @@ export class DashboardService {
   getTendenciaVentasPorMes(desde: string, hasta: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/AdminDashboard/getTendenciaVentasPorMes?desde=${desde}&hasta=${hasta}`);
   }
-  
+
   getGananciasMensuales(): Observable<any> {
-  return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasMensuales`);
-}
+    return this.http.get(`${this.apiUrl}/AdminDashboard/getGananciasMensuales`);
+  }
 
 }

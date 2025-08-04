@@ -50,4 +50,12 @@ export class DocumentacionProductos {
       }
     });
   }
+
+  descargarManual(): void {
+    const link = document.createElement('a');
+    link.href = 'assets/Guía Usuario MiComposta.pdf';
+    link.download = 'Guía Usuario MiComposta.pdf';
+    link.click();
+  }
+
 }
