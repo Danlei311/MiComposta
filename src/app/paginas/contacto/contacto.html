@@ -28,9 +28,16 @@
       </div>
       <div class="col-md-4">
         <select class="form-select" [(ngModel)]="selectedProducto" (change)="cargarMateriales()" #selectProd>
-          <option selected disabled>Selecciona un producto</option>
-          <option *ngFor="let producto of productos" [value]="producto.idProducto">{{ producto.nombre }}</option>
+          <option selected disabled value="">Selecciona un producto</option>
+          <option *ngFor="let producto of productos" [value]="producto.idProducto">
+            {{ producto.nombre }}
+          </option>
         </select>
+      </div>
+      <div class="col-md-4">
+        <div *ngIf="productoSeleccionado" class="capacidad-info">
+          <span class="badge bg-success">Capacidad: {{productoSeleccionado.capacidad}}</span>
+        </div>
       </div>
     </div>
 
