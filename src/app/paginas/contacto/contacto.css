@@ -118,3 +118,17 @@
 input.ng-invalid.ng-touched {
   border-color: #dc3545;
 }
+
+.capacidad-info {
+    padding: 4px 1px;
+    background-color: transparent;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 0px;
+}
+
+.badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+}

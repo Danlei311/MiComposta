@@ -19,6 +19,7 @@ export class Contacto implements OnInit {
   selectedProducto: any = null;
   usuario = { nombre: '', apellido: '', correo: '', telefono: '' };
   cotizacionPrevia: any = null;
+  productoSeleccionado: any = null;
 
   @ViewChild('cotizacionModal') cotizacionModal!: TemplateRef<any>;
 
@@ -44,13 +45,14 @@ export class Contacto implements OnInit {
     const id = Number(this.selectedProducto); // <-- Convertir a número
 
     // Encontrar el producto seleccionado
-    const productoSeleccionado = this.productos.find(p => p.idProducto === id);
-    if (productoSeleccionado) {
-      // Filtrar solo los materiales no obligatorios
-      this.materiales = productoSeleccionado.materiales.map((material: any) => ({
-        ...material,
-        selected: false // Inicializamos 'selected' como false
-      }));
+    this.productoSeleccionado = this.productos.find(p => p.idProducto === id);
+    if (this.productoSeleccionado) {
+        this.materiales = this.productoSeleccionado.materiales.map((material: any) => ({
+            ...material,
+            selected: false
+        }));
+    } else {
+        this.materiales = [];
     }
   }
 
