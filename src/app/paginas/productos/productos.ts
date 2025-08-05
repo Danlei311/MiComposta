@@ -14,6 +14,7 @@ import { MaterialesService } from '../../services/materiales-service';
 export class Productos implements OnInit {
   nombre: string = '';
   descripcion: string = '';
+  capacidad: string = '';
   errorMessage: string = '';
   successMessage: string = '';
   productos: any[] = [];
@@ -75,6 +76,7 @@ export class Productos implements OnInit {
     const nuevoProducto = {
       nombre: this.nombre,
       descripcion: this.descripcion,
+      capacidad: this.capacidad,
       materiales: this.materialesProducto.map(mat => {
         const materialSeleccionado = this.materiales.find(m => m.idMaterial === mat.idMaterial);
         return {
@@ -91,6 +93,7 @@ export class Productos implements OnInit {
         this.successMessage = 'Producto registrado correctamente.';
         this.nombre = '';
         this.descripcion = '';
+        this.capacidad = '';
         this.materialesProducto = [];
         this.obtenerProductos();
         setTimeout(() => this.successMessage = '', 2000);
@@ -164,7 +167,8 @@ export class Productos implements OnInit {
   filterProductos(): void {
     this.filteredProductos = this.productos.filter(producto =>
       producto.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      producto.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase())
+      producto.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      producto.capacidad.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 
